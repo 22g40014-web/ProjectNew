@@ -8,12 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare(
-        "SELECT id, password_hash, status 
-         FROM admins 
-         WHERE username = ? 
-         LIMIT 1"
-    );
+    $stmt = $conn->prepare("
+        SELECT id, password_hash, status 
+        FROM admins 
+        WHERE username = ? 
+        LIMIT 1
+    ");
 
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -22,19 +22,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result->num_rows === 1) {
         $admin = $result->fetch_assoc();
 
-        if (password_verify($password, $admin['password_hash'])) {
+        if (!password_verify($password, $admin['password_hash'])) {
+            $error = "Username atau password salah";
+        } else {
 
-            if ($admin['status'] !== 'approved') {
+            // === CEK STATUS AKUN ===
+            if ($admin['status'] === 'pending') {
                 $error = "Akun Anda belum disetujui admin";
-            } else {
+            } 
+            elseif ($admin['status'] === 'rejected') {
+                $error = "Registrasi Anda ditolak";
+            } 
+            elseif ($admin['status'] === 'approved') {
                 $_SESSION['admin_id'] = $admin['id'];
-                $_SESSION['admin_status'] = $admin['status'];
                 header("Location: dashboard.php");
                 exit;
             }
-
-        } else {
-            $error = "Username atau password salah";
         }
     } else {
         $error = "Username atau password salah";
