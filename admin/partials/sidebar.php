@@ -15,7 +15,7 @@
 
                 <li class="nav-item">
                     <a href="approval.php" class="nav-link text-white">
-                        <i class="bi bi-person-check me-2"></i> Approval Admin
+                        <i class="bi bi-person-check me-2"></i> Approval
                     </a>
                 </li>
 
@@ -26,10 +26,23 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="tools.php" class="nav-link text-white">
+                    <a href="tools_material.php" class="nav-link text-white">
                         <i class="bi bi-tools me-2"></i> Alat & Bahan
                     </a>
                 </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="category.php">
+                        <i class="bi bi-tags me-2"></i> Categories
+                    </a>
+                </li>
+
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="landing_manager.php">
+                        <i class="bi bi-images me-2"></i> Landing Manager
+                    </a>
+                </li>
+
             </ul>
         </div>
     </div>
