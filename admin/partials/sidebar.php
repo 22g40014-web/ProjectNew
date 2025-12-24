@@ -31,15 +31,28 @@
                     </a>
                 </li>
 
-                <li class="nav-item mb-2">
+                <li class="nav-item">
                     <a class="nav-link text-white" href="category.php">
                         <i class="bi bi-tags me-2"></i> Categories
                     </a>
                 </li>
 
-                <li class="nav-item mb-2">
+                <li class="nav-item">
                     <a class="nav-link text-white" href="landing_manager.php">
-                        <i class="bi bi-images me-2"></i> Landing Manager
+                        <i class="bi bi-images me-2"></i> Page Manager
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="transactions.php">
+                        <i class="bi bi-list me-2"></i> Transactions
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="sales.php" class="nav-link text-white">
+                        <i class="bi bi-cash-coin me-2"></i>
+                        Penjualan
                     </a>
                 </li>
 

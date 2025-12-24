@@ -737,4 +737,34 @@
 
 </body>
 
+<!-- untuk memasukan image dari db 
+
+<?php
+require_once 'admin/config/db.php';
+
+$landing = $conn->query("
+    SELECT lp.image, lp.title, p.name
+    FROM landing_products lp
+    JOIN products p ON p.id = lp.product_id
+    WHERE lp.is_active = 1
+");
+?>
+
+<div class="row">
+<?php while ($item = $landing->fetch_assoc()): ?>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="uploads/landing/<?= $item['image'] ?>" class="card-img-top">
+            <div class="card-body text-center">
+                <h5><?= htmlspecialchars($item['name']) ?></h5>
+                <p><?= htmlspecialchars($item['title']) ?></p>
+            </div>
+        </div>
+    </div>
+<?php endwhile; ?>
+</div>
+
+
+-->
+
 </html>

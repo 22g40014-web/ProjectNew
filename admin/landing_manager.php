@@ -95,7 +95,10 @@ include 'partials/header.php';
 include 'partials/sidebar.php';
 ?>
 
-<h4 class="mb-4">Landing Page Manager</h4>
+<div class="col-md-10 p-4">
+    <h3 class="mb-4">Manajemen Landing Page</h3>
+
+    <div class="row g-4">
 
 <?php if ($success): ?>
 <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
@@ -183,7 +186,8 @@ include 'partials/sidebar.php';
             <?php endwhile; endif; ?>
             </tbody>
         </table>
-
+            </div>
+        </div>
     </div>
 </div>
 
