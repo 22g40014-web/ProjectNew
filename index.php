@@ -13,7 +13,7 @@
   <meta name="author" content="" />
   <link rel="shortcut icon" href="images/favicon.png" type="">
 
-  <title> 3MasKentir </title>
+  <title> Projectss </title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -42,9 +42,9 @@
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="index.php">
             <span>
-              3MasKentir
+              CHABA BONSAI
             </span>
           </a>
 
@@ -68,7 +68,7 @@
               </li>
             </ul>
             <div class="user_option">
-              <a href="" class="user_link">
+              <a href="javascript:void(0)" class="user_link" onclick="openLogin()">
                 <i class="fa fa-user" aria-hidden="true"></i>
               </a>
               <a class="cart_link" href="#">
@@ -502,7 +502,7 @@
           <div class="detail-box">
             <div class="heading_container">
               <h2>
-                We Are 3MasKentir
+                CHABA BONSAI
               </h2>
             </div>
             <p>
@@ -668,10 +668,10 @@
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
             <a href="" class="footer-logo">
-              3MasKentir
+              CHABA BONSAI
             </a>
             <p>
-              Udah Jual Bonsai dari sebelum masehi
+              Udah Beli Bonsai dari Chaba Bonsai belum masehhh
             </p>
             <div class="footer_social">
               <a href="">
@@ -714,6 +714,8 @@
   </footer>
   <!-- footer section -->
 
+
+
   <!-- jQery -->
   <script src="js/jquery-3.4.1.min.js"></script>
   <!-- popper js -->
@@ -736,35 +738,5 @@
   <!-- End Google Map -->
 
 </body>
-
-<!-- untuk memasukan image dari db 
-
-<?php
-require_once 'admin/config/db.php';
-
-$landing = $conn->query("
-    SELECT lp.image, lp.title, p.name
-    FROM landing_products lp
-    JOIN products p ON p.id = lp.product_id
-    WHERE lp.is_active = 1
-");
-?>
-
-<div class="row">
-<?php while ($item = $landing->fetch_assoc()): ?>
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <img src="uploads/landing/<?= $item['image'] ?>" class="card-img-top">
-            <div class="card-body text-center">
-                <h5><?= htmlspecialchars($item['name']) ?></h5>
-                <p><?= htmlspecialchars($item['title']) ?></p>
-            </div>
-        </div>
-    </div>
-<?php endwhile; ?>
-</div>
-
-
--->
 
 </html>
