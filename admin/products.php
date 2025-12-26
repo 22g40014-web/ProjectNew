@@ -10,27 +10,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     $category_id = (int)$_POST['category_id'];
     $name        = trim($_POST['name']);
     $description = trim($_POST['description']);
-    $stock       = (int)$_POST['stock'];
+    //$stock       = (int)$_POST['stock'];
+    $stock = isset($_POST['stock']) && $_POST['stock'] !== ''
+    ? (int) $_POST['stock']
+    : null;
     $price_buy   = (float)$_POST['price_buy'];
     $price_sell  = (float)$_POST['price_sell'];
-
+    //$is_active = ($stock > 0) ? 1 : 0;
+    $stock = (int)$_POST['stock'];
+    // =====================
+    // LOGIC STATUS AKTIF
+    // =====================
+    $is_active = ($stock > 0) ? 1 : 0;
+    
     $conn->begin_transaction();
 
     try {
+
         // INSERT PRODUCT
         $stmt = $conn->prepare("
             INSERT INTO products
             (category_id, name, description, stock, price_buy, price_sell, is_active)
-            VALUES (?, ?, ?, ?, ?, ?, 1)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->bind_param(
-            "issidd",
+            "issidi",
             $category_id,
             $name,
             $description,
             $stock,
             $price_buy,
-            $price_sell
+            $price_sell,
+            $is_active
         );
         $stmt->execute();
         $product_id = $stmt->insert_id;
@@ -77,6 +88,9 @@ if (isset($_POST['update_product'])) {
     $price_buy = $_POST['price_buy'];
     $price_sell = $_POST['price_sell'];
     $description = $_POST['description'];
+    $is_active = ($stock == 0) ? 0 : 1;
+
+    //$is_active = $_POST['is_active'];
 
     // UPDATE DATA PRODUK (TANPA IMAGE)
     $conn->query("
@@ -85,7 +99,9 @@ if (isset($_POST['update_product'])) {
             stock='$stock',
             price_buy='$price_buy',
             price_sell='$price_sell',
-            description='$description'
+            description='$description',
+            is_active='$is_active'
+        
         WHERE id=$id
     ");
 
