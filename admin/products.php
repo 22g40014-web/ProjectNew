@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->bind_param(
-            "issidi",
+            "issiddi",
             $category_id,
             $name,
             $description,
@@ -118,7 +118,7 @@ if (isset($_POST['update_product'])) {
 
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $newName = "product_".$id."_".time().".".$ext;
-        $uploadDir = "../uploads/";
+        $uploadDir = "admin/uploads/";
         $imagePath = $uploadDir.$newName;
 
         if (!is_dir($uploadDir)) {
