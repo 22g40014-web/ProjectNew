@@ -55,16 +55,16 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  mx-auto ">
               <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="menu.html">Menu</a>
+                <a class="nav-link" href="menu.php">Menu</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
+                <a class="nav-link" href="about.php">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="book.html">Book Table</a>
+                <a class="nav-link" href="book.php">Book Table</a>
               </li>
             </ul>
             <div class="user_option">
@@ -736,5 +736,35 @@
   <!-- End Google Map -->
 
 </body>
+
+<!-- untuk memasukan image dari db 
+
+<?php
+require_once 'admin/config/db.php';
+
+$landing = $conn->query("
+    SELECT lp.image, lp.title, p.name
+    FROM landing_products lp
+    JOIN products p ON p.id = lp.product_id
+    WHERE lp.is_active = 1
+");
+?>
+
+<div class="row">
+<?php while ($item = $landing->fetch_assoc()): ?>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="uploads/landing/<?= $item['image'] ?>" class="card-img-top">
+            <div class="card-body text-center">
+                <h5><?= htmlspecialchars($item['name']) ?></h5>
+                <p><?= htmlspecialchars($item['title']) ?></p>
+            </div>
+        </div>
+    </div>
+<?php endwhile; ?>
+</div>
+
+
+-->
 
 </html>
