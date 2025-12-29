@@ -44,12 +44,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="transactions.php">
-                        <i class="bi bi-list me-2"></i> Transactions
-                    </a>
-                </li>
-
-                <li class="nav-item">
                     <a href="sales.php" class="nav-link text-white">
                         <i class="bi bi-cash-coin me-2"></i>
                         Penjualan

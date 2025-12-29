@@ -1,5 +1,4 @@
 <?php
-require_once 'admin/auth.php';
 require_once 'admin/config/db.php';
 
 /* =====================
