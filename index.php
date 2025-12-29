@@ -1,7 +1,43 @@
+<?php
+require_once 'admin/config/db.php';
+
+/* =====================
+   AMBIL KATEGORI
+===================== */
+$categories = [];
+$qCat = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
+while ($c = $qCat->fetch_assoc()) {
+    $categories[] = $c;
+}
+
+/* =====================
+   AMBIL PRODUK
+===================== */
+$products = [];
+$qProd = $conn->query("
+    SELECT 
+        p.id, p.name, p.description, p.price_sell,
+        c.id AS category_id,
+        pi.image
+    FROM products p
+    JOIN categories c ON c.id = p.category_id
+    LEFT JOIN product_images pi ON pi.product_id = p.id
+    WHERE p.is_active = 1
+    ORDER BY p.created_at DESC
+");
+
+while ($p = $qProd->fetch_assoc()) {
+    $products[$p['category_id']][] = $p;
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 
 <head>
+
   <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -30,6 +66,91 @@
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
 
+  
+<style>
+/* ===============================
+   MENU STYLE
+   =============================== */
+.menu-nav .btn {
+  border-radius: 30px;
+  margin: 5px;
+}
+
+.menu-nav .btn.active {
+  background: #ffbe33;
+  color: #000;
+}
+
+.menu-card {
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+  height: 100%;
+}
+
+.menu-card .img-box {
+  height: 220px;
+  overflow: hidden;
+}
+
+.menu-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empty-category {
+  min-height: 300px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #999;
+}
+
+/* ===============================
+   CAROUSEL FIX
+   =============================== */
+#menuCarousel {
+  max-width: 1300px;
+  margin: auto;
+  overflow: hidden;
+}
+
+#menuCarousel .row {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+#menuCarousel .owl-stage-outer {
+  overflow: hidden;
+}
+
+/* ===============================
+   SEARCH BAR
+   =============================== */
+#searchProduct {
+  border-radius: 30px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.1);
+}
+
+/* ===============================
+   STICKY NAVBAR
+   =============================== */
+.header_section {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  transition: .3s ease;
+}
+
+.header_section.sticky-active {
+  background: rgba(0,0,0,.9);
+  box-shadow: 0 5px 20px rgba(0,0,0,.3);
+}
+</style>
 </head>
 
 <body>
@@ -171,319 +292,73 @@
   </div>
 
   <!-- offer section -->
+  
+<!-- ================= MENU ================= -->
+  <section class="food_section layout_padding">
+  <div class="container">
 
-  <section class="offer_section layout_padding-bottom">
-    <div class="offer_container">
-      <div class="container ">
-        <div class="row">
-          <div class="col-md-6  ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/o1.jpg" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Koleksi Pohon Musim Dingin
-                </h5>
-                <h6>
-                  <span>20%</span> Off
-                </h6>
-                <a href="">
-                  Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6  ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/o2.webp" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Karya Seni Rimbun Tropis
-                </h5>
-                <h6>
-                  <span>15%</span> Off
-                </h6>
-                <a href="">
-                  Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  <h2 class="text-center mb-4">Our Menu</h2>
+
+  <!-- NAV KATEGORI -->
+  <div class="text-center menu-nav mb-3">
+  <?php foreach ($categories as $i => $c): ?>
+    <button class="btn btn-outline-warning <?= $i==0?'active':'' ?>" data-index="<?= $i ?>">
+      <?= htmlspecialchars($c['name']) ?>
+    </button>
+  <?php endforeach; ?>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-5">
+      <input type="text" id="searchProduct" class="form-control text-center"
+            placeholder="Cari produk berdasarkan nama...">
     </div>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="owl-carousel owl-theme" id="menuCarousel">
+
+  <?php foreach ($categories as $c): ?>
+  <div class="item">
+  <h3 class="text-center mb-4"><?= htmlspecialchars($c['name']) ?></h3>
+
+  <div class="row justify-content-center">
+  <?php if (!empty($products[$c['id']])): ?>
+  <?php foreach ($products[$c['id']] as $p):
+  $image = 'assets/images/no-image.png';
+  if (!empty($p['image'])) {
+    $path = 'admin/uploads/products/'.basename($p['image']);
+    if (file_exists($path)) $image = $path;
+  }
+  ?>
+  <div class="col-sm-6 col-lg-4 mb-4 product-item"
+      data-name="<?= strtolower($p['name']) ?>">
+  <div class="menu-card">
+    <div class="img-box"><img src="<?= $image ?>"></div>
+    <div class="p-3 text-center">
+      <h5><?= htmlspecialchars($p['name']) ?></h5>
+      <p><?= htmlspecialchars($p['description']) ?></p>
+      <h6 class="text-warning">Rp <?= number_format($p['price_sell'],0,',','.') ?></h6>
+    </div>
+  </div>
+  </div>
+  <?php endforeach; ?>
+  <?php endif; ?>
+
+  <div class="empty-category">
+    <i class="fa fa-search fa-3x text-warning mb-2"></i>
+    <h6>Produk tidak ditemukan</h6>
+  </div>
+
+  </div>
+  </div>
+  <?php endforeach; ?>
+
+  </div>
+  </div>
   </section>
 
-  <!-- end offer section -->
-
-  <!-- food section -->
-
-  <section class="food_section layout_padding-bottom">
-    <div class="container">
-      <div class="heading_container heading_center">
-        <h2>
-          List Katalog
-        </h2>
-      </div>
-
-      <ul class="filters_menu">
-        <li class="active" data-filter="*">All</li>
-        <li data-filter=".Kontes">Kontes</li>
-        <li data-filter=".Jadi">Jadi</li>
-        <li data-filter=".Setengah_Jadi">Setengah Jadi</li>
-        <li data-filter=".Bahan">Bahan</li>
-      </ul>
-
-      <div class="filters-content">
-        <div class="row grid">
-          <div class="col-sm-6 col-lg-4 all Kontes">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f1.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Juniper Shimpaku
-                  </h5>
-                  <p>
-                    Seni Liku Alami & Kayu Mati. Dibentuk dengan gaya Cascade.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $20
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Kontes">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f2.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Ficus Kimeng Mame
-                  </h5>
-                  <p>
-                    Ukuran Mini, Perawatan Mudah. Cocok untuk indoor dan pemula.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $15
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Jadi">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f3.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Bonsai Sancang Premium
-                  </h5>
-                  <p>
-                    Pohon Induk Berumur Panjang. Gaya tegak formal (Chokkan).
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $17
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Setengah_Jadi">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f4.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Bonsai Serut Liukan
-                  </h5>
-                  <p>
-                    Batang Berliku Eksotis. Kondisi Sehat dan Rimbun. Siap untuk Display.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $18
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all fries">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f5.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Pohon Legendaris L.O.
-                  </h5>
-                  <p>
-                    Gaya Kaskade (Kengai). Batang kokoh dan daun kecil.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $10
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Jadi">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f6.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Ulmus Tegak Bersusun
-                  </h5>
-                  <p>
-                    Gaya Broom (Hokidachi). Daun rimbun dan cabang merata.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $15
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Kontes">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f7.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Azalea Satsuki Rimbun
-                  </h5>
-                  <p>
-                    Spesies Bunga Indah. Siap Mekar Penuh. Gaya Semi Kaskade.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $12
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Jadi">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f8.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Pemphis Acidula (Santigi)
-                  </h5>
-                  <p>
-                    Pohon Pantai Kuat. Akar mencengkeram batu (Sekijoju).
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $14
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-sm-6 col-lg-4 all Setengah_Jadi">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="images/f9.jpg" alt="">
-                </div>
-                <div class="detail-box">
-                  <h5>
-                    Pinus Taiwan Tua
-                  </h5>
-                  <p>
-                    Memiliki Ijin & Shari Otentik. Usia lebih dari 30 tahun.
-                  </p>
-                  <div class="options">
-                    <h6>
-                      $10
-                    </h6>
-                    <a href="">
-                      <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="btn-box">
-        <a href="">
-          View More
-        </a>
-      </div>
-    </div>
-  </section>
 
   <!-- end food section -->
 
@@ -714,6 +589,54 @@
   </footer>
   <!-- footer section -->
 
+  <!-- tambahan script  -->
+  <!-- ================= JS ================= -->
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <script>
+    $(function(){
+
+    const owl = $('#menuCarousel').owlCarousel({
+      items:1,
+      dots:false,
+      nav:false,
+      smartSpeed:600
+    });
+
+    $('.menu-nav .btn').click(function(){
+      owl.trigger('to.owl.carousel', [$(this).data('index'),500]);
+      $('.menu-nav .btn').removeClass('active');
+      $(this).addClass('active');
+    });
+
+    /* SEARCH */
+    $('#searchProduct').on('keyup', function(){
+      let key = $(this).val().toLowerCase();
+
+      $('#menuCarousel .item').each(function(){
+        let found = false;
+        $(this).find('.product-item').each(function(){
+          if($(this).data('name').includes(key)){
+            $(this).show(); found = true;
+          } else {
+            $(this).hide();
+          }
+        });
+        $(this).find('.empty-category').toggle(!found);
+      });
+    });
+
+    /* STICKY */
+    $(window).on('scroll', function(){
+      $('.header_section').toggleClass('sticky-active', $(this).scrollTop()>50);
+    });
+
+    });
+    </script>
+
+
 
 
   <!-- jQery -->
@@ -736,6 +659,8 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
   </script>
   <!-- End Google Map -->
+
+
 
 </body>
 
