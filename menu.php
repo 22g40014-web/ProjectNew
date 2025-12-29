@@ -191,6 +191,17 @@ while ($p = $qProd->fetch_assoc()) {
   background: rgba(0,0,0,.9);
   box-shadow: 0 5px 20px rgba(0,0,0,.3);
 }
+
+.menu-card {
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,.15);
+}
+
 </style>
 </head>
 
@@ -344,7 +355,11 @@ while ($p = $qProd->fetch_assoc()) {
     ?>
       <div class="col-sm-6 col-lg-4 mb-4 product-item"
            data-name="<?= strtolower($p['name']) ?>">
-        <div class="menu-card">
+        <div class="menu-card product-modal-trigger"
+     data-name="<?= htmlspecialchars($p['name']) ?>"
+     data-description="<?= htmlspecialchars($p['description']) ?>"
+     data-image="<?= $image ?>"
+     data-price="Rp <?= number_format($p['price_sell'],0,',','.') ?>">
           <div class="img-box">
             <img src="<?= $image ?>">
           </div>
@@ -371,6 +386,38 @@ while ($p = $qProd->fetch_assoc()) {
 <?php endforeach; ?>
 
 </div>
+
+<!-- ================= MODAL PRODUK ================= -->
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProductName"></h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <img id="modalProductImage"
+                 src=""
+                 class="img-fluid rounded"
+                 alt="">
+          </div>
+          <div class="col-md-6">
+            <h6 class="text-warning" id="modalProductPrice"></h6>
+            <p id="modalProductDescription"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 <!-- ================= CORE JS (WAJIB URUT) ================= -->
 <script src="js/jquery-3.4.1.min.js"></script>
@@ -432,6 +479,19 @@ $(document).ready(function(){
 
 });
 </script>
+
+<script>
+$(document).on('click', '.product-modal-trigger', function(){
+
+  $('#modalProductName').text($(this).data('name'));
+  $('#modalProductDescription').text($(this).data('description'));
+  $('#modalProductImage').attr('src', $(this).data('image'));
+  $('#modalProductPrice').text($(this).data('price'));
+
+  $('#productModal').modal('show');
+});
+</script>
+
 
 <!-- custom js -->
 <script src="js/custom.js"></script>
