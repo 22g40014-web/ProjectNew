@@ -70,7 +70,7 @@ while ($p = $qProd->fetch_assoc()) {
 <style>
 /* ===============================
    MENU STYLE
-   =============================== */
+=============================== */
 .menu-nav .btn {
   border-radius: 30px;
   margin: 5px;
@@ -101,7 +101,7 @@ while ($p = $qProd->fetch_assoc()) {
 }
 
 .empty-category {
-  min-height: 300px;
+  min-height: 250px;
   display: none;
   justify-content: center;
   align-items: center;
@@ -110,26 +110,56 @@ while ($p = $qProd->fetch_assoc()) {
 }
 
 /* ===============================
-   CAROUSEL FIX
-   =============================== */
+   🔥 OWL HEIGHT FIX (INTI SOLUSI)
+=============================== */
 #menuCarousel {
   max-width: 1300px;
   margin: auto;
-  overflow: hidden;
 }
 
-#menuCarousel .row {
-  margin-left: 15px;
-  margin-right: 15px;
+#menuCarousel .item {
+  display: flex;
+  flex-direction: column;
 }
+
+@media (max-width: 768px) {
+  .menu-scroll {
+    min-height: 520px;
+    max-height: 520px;
+  }
+}
+
 
 #menuCarousel .owl-stage-outer {
   overflow: hidden;
 }
 
+/* AREA SCROLL PER KATEGORI */
+
+.menu-scroll {
+  min-height: 760px;   /* cukup untuk 6 card */
+  max-height: 760px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+.menu-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.menu-scroll::-webkit-scrollbar-thumb {
+  background: #ffbe33;
+  border-radius: 10px;
+}
+
+.menu-scroll::-webkit-scrollbar-horizontal {
+  display: none;
+}
+
+
 /* ===============================
    SEARCH BAR
-   =============================== */
+=============================== */
 #searchProduct {
   border-radius: 30px;
   padding: 12px 20px;
@@ -138,7 +168,7 @@ while ($p = $qProd->fetch_assoc()) {
 
 /* ===============================
    STICKY NAVBAR
-   =============================== */
+=============================== */
 .header_section {
   position: sticky;
   top: 0;
@@ -150,6 +180,26 @@ while ($p = $qProd->fetch_assoc()) {
   background: rgba(0,0,0,.9);
   box-shadow: 0 5px 20px rgba(0,0,0,.3);
 }
+
+/* ===== FIX JARAK MENU KE SECTION BAWAH ===== */
+.food_section {
+    padding-bottom: 80px;
+}
+
+.about_section {
+    margin-top: 80px;
+}
+
+.footer_section .container-fluid {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.footer_section {
+  max-width: 100%;
+}
+
 </style>
 </head>
 
@@ -339,8 +389,8 @@ while ($p = $qProd->fetch_assoc()) {
     </div>
   </section>
 <!-- ================= MENU ================= -->
-  <section class="food_section layout_padding">
-  <div class="container">
+  <section class="food_section layout_padding" style="padding:0px 0px" >
+  <div class="container-fluid">
 
   <h2 class="text-center mb-4">Our Menu</h2>
 
@@ -364,48 +414,51 @@ while ($p = $qProd->fetch_assoc()) {
   <!-- CAROUSEL -->
   <div class="owl-carousel owl-theme" id="menuCarousel">
 
-  <?php foreach ($categories as $c): ?>
-  <div class="item">
+<?php foreach ($categories as $c): ?>
+<div class="item">
   <h3 class="text-center mb-4"><?= htmlspecialchars($c['name']) ?></h3>
 
-  <div class="row justify-content-center">
-  <?php if (!empty($products[$c['id']])): ?>
-  <?php foreach ($products[$c['id']] as $p):
-  $image = 'assets/images/no-image.png';
-  if (!empty($p['image'])) {
-    $path = 'admin/uploads/products/'.basename($p['image']);
-    if (file_exists($path)) $image = $path;
-  }
-  ?>
-  <div class="col-sm-6 col-lg-4 mb-4 product-item"
-      data-name="<?= strtolower($p['name']) ?>">
-  <div class="menu-card">
-    <div class="img-box"><img src="<?= $image ?>"></div>
-    <div class="p-3 text-center">
-      <h5><?= htmlspecialchars($p['name']) ?></h5>
-      <p><?= htmlspecialchars($p['description']) ?></p>
-      <h6 class="text-warning">Rp <?= number_format($p['price_sell'],0,',','.') ?></h6>
+  <!-- 🔥 SCROLL INTERNAL -->
+  <div class="menu-scroll">
+    <div class="row justify-content-center">
+
+    <?php if (!empty($products[$c['id']])): ?>
+    <?php foreach ($products[$c['id']] as $p):
+      $image = 'assets/images/no-image.png';
+      if (!empty($p['image'])) {
+        $path = 'admin/uploads/products/'.basename($p['image']);
+        if (file_exists($path)) $image = $path;
+      }
+    ?>
+      <div class="col-sm-6 col-lg-4 mb-4 product-item"
+           data-name="<?= strtolower($p['name']) ?>">
+        <div class="menu-card">
+          <div class="img-box">
+            <img src="<?= $image ?>">
+          </div>
+          <div class="p-3 text-center">
+            <h5><?= htmlspecialchars($p['name']) ?></h5>
+            <p><?= htmlspecialchars($p['description']) ?></p>
+            <h6 class="text-warning">
+              Rp <?= number_format($p['price_sell'],0,',','.') ?>
+            </h6>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+    <?php endif; ?>
+
+    <div class="empty-category">
+      <i class="fa fa-search fa-3x text-warning mb-2"></i>
+      <h6>Produk tidak ditemukan</h6>
+    </div>
+
     </div>
   </div>
-  </div>
-  <?php endforeach; ?>
-  <?php endif; ?>
+</div>
+<?php endforeach; ?>
 
-  <div class="empty-category">
-    <i class="fa fa-search fa-3x text-warning mb-2"></i>
-    <h6>Produk tidak ditemukan</h6>
-  </div>
-
-  </div>
-  </div>
-  <?php endforeach; ?>
-
-  </div>
-  </div>
-  </section>
-
-
-  <!-- end food section -->
+</div>
 
   <!-- about section -->
 
@@ -556,7 +609,7 @@ while ($p = $qProd->fetch_assoc()) {
 
   <!-- footer section -->
   <footer class="footer_section">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-md-4 footer-col">
           <div class="footer_contact">
@@ -634,76 +687,70 @@ while ($p = $qProd->fetch_assoc()) {
   </footer>
   <!-- footer section -->
 
-  <!-- tambahan script  -->
-  <!-- ================= JS ================= -->
-    <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<!-- ================= CORE JS (WAJIB URUT) ================= -->
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
 
-    <script>
-    $(function(){
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
 
-    const owl = $('#menuCarousel').owlCarousel({
-      items:1,
-      dots:false,
-      nav:false,
-      smartSpeed:600
-    });
+<!-- ================= MENU SCRIPT ================= -->
+<script>
+$(document).ready(function(){
 
-    $('.menu-nav .btn').click(function(){
-      owl.trigger('to.owl.carousel', [$(this).data('index'),500]);
-      $('.menu-nav .btn').removeClass('active');
-      $(this).addClass('active');
-    });
+  /* INIT OWL */
+  const owl = $('#menuCarousel').owlCarousel({
+    items: 1,
+    dots: false,
+    nav: false,
+    smartSpeed: 600,
+    autoHeight: false
+  });
 
-    /* SEARCH */
-    $('#searchProduct').on('keyup', function(){
-      let key = $(this).val().toLowerCase();
+  /* NAV KATEGORI */
+  $('.menu-nav .btn').on('click', function(){
+    const index = $(this).data('index');
 
-      $('#menuCarousel .item').each(function(){
-        let found = false;
-        $(this).find('.product-item').each(function(){
-          if($(this).data('name').includes(key)){
-            $(this).show(); found = true;
-          } else {
-            $(this).hide();
-          }
-        });
-        $(this).find('.empty-category').toggle(!found);
+    owl.trigger('to.owl.carousel', [index, 400]);
+
+    $('.menu-nav .btn').removeClass('active');
+    $(this).addClass('active');
+  });
+
+  /* SEARCH PRODUK */
+  $('#searchProduct').on('keyup', function(){
+    let key = $(this).val().toLowerCase();
+
+    $('#menuCarousel .item').each(function(){
+      let found = false;
+
+      $(this).find('.product-item').each(function(){
+        if($(this).data('name').includes(key)){
+          $(this).show();
+          found = true;
+        } else {
+          $(this).hide();
+        }
       });
+
+      $(this).find('.empty-category').toggle(!found);
     });
+  });
 
-    /* STICKY */
-    $(window).on('scroll', function(){
-      $('.header_section').toggleClass('sticky-active', $(this).scrollTop()>50);
-    });
+  /* STICKY HEADER */
+  $(window).on('scroll', function(){
+    $('.header_section').toggleClass(
+      'sticky-active',
+      $(this).scrollTop() > 50
+    );
+  });
 
-    });
-    </script>
+});
+</script>
 
+<!-- custom js -->
+<script src="js/custom.js"></script>
 
-
-
-  <!-- jQery -->
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <!-- popper js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
-  <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
-  <!-- owl slider -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
-  <!-- isotope js -->
-  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-  <!-- nice select -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-  <!-- custom js -->
-  <script src="js/custom.js"></script>
-  <!-- Google Map -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-  </script>
-  <!-- End Google Map -->
 
 
 
