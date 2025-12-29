@@ -143,7 +143,7 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
               <a href="">
                 <i class="fa fa-phone" aria-hidden="true"></i>
                 <span>
-                  Call +62123456789
+                  Call +62 882-3946-8557
                 </span>
               </a>
               <a href="">
