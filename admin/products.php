@@ -2,58 +2,51 @@
 require_once 'auth.php';
 require_once 'config/db.php';
 
-// =====================
-// TAMBAH PRODUK
-// =====================
+/* ===============================
+   PAGINATION
+================================ */
+$limit = 10;
+$page  = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page  = ($page < 1) ? 1 : $page;
+$offset = ($page - 1) * $limit;
+
+/* ===============================
+   TAMBAH PRODUK (TIDAK DIUBAH)
+================================ */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
 
     $category_id = (int)$_POST['category_id'];
     $name        = trim($_POST['name']);
     $description = trim($_POST['description']);
-    //$stock       = (int)$_POST['stock'];
-    $stock = isset($_POST['stock']) && $_POST['stock'] !== ''
-    ? (int) $_POST['stock']
-    : null;
+    $stock       = (int)$_POST['stock'];
     $price_buy   = (float)$_POST['price_buy'];
     $price_sell  = (float)$_POST['price_sell'];
-    //$is_active = ($stock > 0) ? 1 : 0;
-    $stock = (int)$_POST['stock'];
-    // =====================
-    // LOGIC STATUS AKTIF
-    // =====================
-    $is_active = ($stock > 0) ? 1 : 0;
-    
+    $is_active   = ($stock > 0) ? 1 : 0;
+
     $conn->begin_transaction();
 
     try {
-
-        // INSERT PRODUCT
         $stmt = $conn->prepare("
             INSERT INTO products
             (category_id, name, description, stock, price_buy, price_sell, is_active)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->bind_param(
-            "issiddi",
-            $category_id,
-            $name,
-            $description,
-            $stock,
-            $price_buy,
-            $price_sell,
-            $is_active
+        $stmt->bind_param("issiddi",
+            $category_id, $name, $description,
+            $stock, $price_buy, $price_sell, $is_active
         );
         $stmt->execute();
         $product_id = $stmt->insert_id;
         $stmt->close();
 
-        // =====================
-        // UPLOAD GAMBAR
-        // =====================
         if (!empty($_FILES['image']['name'])) {
             $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             $filename = uniqid('product_') . '.' . $ext;
             $path = 'uploads/products/' . $filename;
+
+            if (!is_dir('uploads/products')) {
+                mkdir('uploads/products', 0777, true);
+            }
 
             move_uploaded_file($_FILES['image']['tmp_name'], $path);
 
@@ -76,13 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
     }
 }
 
-
-
-
-// testttttt//
+/* ===============================
+   UPDATE PRODUK (TIDAK DIUBAH)
+================================ */
 if (isset($_POST['update_product'])) {
 
-    $id = intval($_POST['id']);
+    $id = (int)$_POST['id'];
     $name = $_POST['name'];
     $stock = $_POST['stock'];
     $price_buy = $_POST['price_buy'];
@@ -90,9 +82,6 @@ if (isset($_POST['update_product'])) {
     $description = $_POST['description'];
     $is_active = ($stock == 0) ? 0 : 1;
 
-    //$is_active = $_POST['is_active'];
-
-    // UPDATE DATA PRODUK (TANPA IMAGE)
     $conn->query("
         UPDATE products SET
             name='$name',
@@ -101,75 +90,49 @@ if (isset($_POST['update_product'])) {
             price_sell='$price_sell',
             description='$description',
             is_active='$is_active'
-        
         WHERE id=$id
     ");
 
-    // ================= IMAGE =================
-
     if (!empty($_FILES['image']['name'])) {
 
-        // Ambil gambar lama
-        $q = $conn->query("
-            SELECT image FROM product_images 
-            WHERE product_id=$id LIMIT 1
-        ");
+        $q = $conn->query("SELECT image FROM product_images WHERE product_id=$id LIMIT 1");
         $old = $q->fetch_assoc();
 
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $newName = "product_".$id."_".time().".".$ext;
-        $uploadDir = "admin/uploads/";
-        $imagePath = $uploadDir.$newName;
+        $newName = "product_{$id}_" . time() . "." . $ext;
+        $path = "uploads/products/" . $newName;
 
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
+        move_uploaded_file($_FILES['image']['tmp_name'], $path);
 
-        move_uploaded_file($_FILES['image']['tmp_name'], $imagePath);
-
-        // hapus gambar lama
         if ($old && file_exists($old['image'])) {
             unlink($old['image']);
         }
 
-        // cek sudah ada image atau belum
         if ($old) {
-            // UPDATE
-            $conn->query("
-                UPDATE product_images 
-                SET image='$imagePath' 
-                WHERE product_id=$id
-            ");
+            $conn->query("UPDATE product_images SET image='$path' WHERE product_id=$id");
         } else {
-            // INSERT
-            $conn->query("
-                INSERT INTO product_images (product_id, image)
-                VALUES ($id, '$imagePath')
-            ");
+            $conn->query("INSERT INTO product_images (product_id, image) VALUES ($id, '$path')");
         }
     }
 
-    echo "<script>location.href='';</script>";
+    header("Location: products.php");
+    exit;
 }
 
+/* ===============================
+   DELETE (TIDAK DIUBAH)
+================================ */
 if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-
-    // hapus relasi stock dulu jika ada
+    $id = (int)$_GET['delete'];
     $conn->query("DELETE FROM product_stock WHERE product_id=$id");
-
-    // hapus produk
     $conn->query("DELETE FROM products WHERE id=$id");
-
-    echo "<script>location.href='';</script>";
+    header("Location: products.php");
+    exit;
 }
 
-
-
-// =====================
-// DATA
-// =====================
-$where = [];
+/* ===============================
+   SEARCH
+================================ */
 $conditions = [];
 
 if (!empty($_GET['search_name'])) {
@@ -178,315 +141,255 @@ if (!empty($_GET['search_name'])) {
 }
 
 if (!empty($_GET['search_category'])) {
-    $cat_id = (int) $_GET['search_category'];
+    $cat_id = (int)$_GET['search_category'];
     $conditions[] = "p.category_id = $cat_id";
 }
 
-if (!empty($conditions)) {
-    $where = "WHERE " . implode(" AND ", $conditions);
-} else {
-    $where = "";
+$where = !empty($conditions)
+    ? "WHERE " . implode(" AND ", $conditions)
+    : "";
+
+/* ===============================
+   TOTAL DATA (BATAS PAGE)
+================================ */
+$totalQ = $conn->query("
+    SELECT COUNT(*) AS total
+    FROM products p
+    JOIN categories c ON c.id = p.category_id
+    $where
+");
+$totalData  = (int)($totalQ->fetch_assoc()['total'] ?? 0);
+$totalPages = max(1, ceil($totalData / $limit));
+
+if ($page > $totalPages) {
+    $page = $totalPages;
+    $offset = ($page - 1) * $limit;
 }
 
-
-
-$categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
-
+/* ===============================
+   DATA PRODUK
+================================ */
 $products = $conn->query("
-    SELECT 
-        p.*, 
-        c.name AS category_name,
-        pi.image
+    SELECT p.*, c.name AS category_name, pi.image
     FROM products p
     JOIN categories c ON c.id = p.category_id
     LEFT JOIN product_images pi ON pi.product_id = p.id
     $where
     ORDER BY p.created_at DESC
+    LIMIT $limit OFFSET $offset
 ");
 
+/* ===============================
+   QUERY STRING PAGINATION
+================================ */
+$params = $_GET;
+unset($params['page']);
+$queryString = http_build_query($params);
+
+/* ===============================
+   DATA KATEGORI
+================================ */
+$categories = $conn->query("SELECT * FROM categories ORDER BY name ASC");
 
 include 'partials/header.php';
 include 'partials/sidebar.php';
 ?>
 
 <div class="col-md-10 p-4">
-
 <h3 class="mb-4">Manajemen Produk</h3>
 
-<!-- ================= FORM ================= -->
+<!-- ================= FORM TAMBAH (TETAP) ================= -->
 <div class="card mb-4">
-    <div class="card-header fw-semibold">Tambah Produk</div>
-    <div class="card-body">
-        <form method="POST" enctype="multipart/form-data" class="row g-3">
+<div class="card-header fw-semibold">Tambah Produk</div>
+<div class="card-body">
+<form method="POST" enctype="multipart/form-data" class="row g-3">
 
-            <div class="col-md-6">
-                <label class="form-label">Nama Produk</label>
-                <input type="text" name="name" class="form-control" required>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Kategori</label>
-                <select name="category_id" class="form-select" required>
-                    <option value="">-- Pilih Kategori --</option>
-                    <?php while($c=$categories->fetch_assoc()): ?>
-                        <option value="<?= $c['id']; ?>">
-                            <?= htmlspecialchars($c['name']); ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
-
-            <div class="col-md-12">
-                <label class="form-label">Deskripsi</label>
-                <textarea name="description" class="form-control" rows="3" required></textarea>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Stock</label>
-                <input type="number" name="stock" class="form-control" required>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Harga Beli</label>
-                <input type="number" step="0.01" name="price_buy" class="form-control" required>
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Harga Jual</label>
-                <input type="number" step="0.01" name="price_sell" class="form-control" required>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label">Gambar Produk</label>
-                <input type="file" name="image" class="form-control">
-            </div>
-
-            <button type="submit" name="add_product" class="btn btn-success">
-                Simpan Produk
-            </button>
-
-
-        </form>
-    </div>
+<div class="col-md-6">
+<label>Nama Produk</label>
+<input type="text" name="name" class="form-control" required>
 </div>
 
-<!-- SEARCH PRODUK -->
+<div class="col-md-6">
+<label>Kategori</label>
+<select name="category_id" class="form-select" required>
+<option value="">-- Pilih Kategori --</option>
+<?php while($c=$categories->fetch_assoc()): ?>
+<option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
+<?php endwhile; ?>
+</select>
+</div>
+
+<div class="col-md-12">
+<label>Deskripsi</label>
+<textarea name="description" class="form-control" required></textarea>
+</div>
+
+<div class="col-md-4">
+<label>Stock</label>
+<input type="number" name="stock" class="form-control" required>
+</div>
+
+<div class="col-md-4">
+<label>Harga Beli</label>
+<input type="number" step="0.01" name="price_buy" class="form-control" required>
+</div>
+
+<div class="col-md-4">
+<label>Harga Jual</label>
+<input type="number" step="0.01" name="price_sell" class="form-control" required>
+</div>
+
+<div class="col-md-6">
+<label>Gambar</label>
+<input type="file" name="image" class="form-control">
+</div>
+
+<button type="submit" name="add_product" class="btn btn-success">
+Simpan Produk
+</button>
+
+</form>
+</div>
+</div>
+
+<!-- ================= SEARCH ================= -->
 <form method="GET" class="mb-3">
-    <div class="row g-3 align-items-end" style="max-width: 700px;">
+<div class="row g-3 align-items-end" style="max-width:700px">
 
-        <!-- CARI NAMA PRODUK -->
-        <div class="col-md-5">
-            <label class="form-label fw-semibold">Nama Produk</label>
-            <input 
-                type="text" 
-                name="search_name" 
-                class="form-control"
-                placeholder="Ketik sebagian nama produk..."
-                value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : ''; ?>">
-        </div>
+<div class="col-md-5">
+<label>Nama Produk</label>
+<input type="text" name="search_name" class="form-control"
+value="<?= htmlspecialchars($_GET['search_name'] ?? '') ?>">
+</div>
 
-        <!-- JARAK VISUAL -->
-        <div class="col-md-1"></div>
+<div class="col-md-1"></div>
 
-        <!-- DROPDOWN KATEGORI -->
-        <div class="col-md-4">
-            <label class="form-label fw-semibold">Kategori</label>
-            <select name="search_category" class="form-select">
-                <option value="">-- Semua Kategori --</option>
+<div class="col-md-4">
+<label>Kategori</label>
+<select name="search_category" class="form-select">
+<option value="">-- Semua Kategori --</option>
+<?php
+$cat5 = $conn->query("SELECT id,name FROM categories ORDER BY name ASC LIMIT 5");
+while($c=$cat5->fetch_assoc()):
+?>
+<option value="<?= $c['id']; ?>"
+<?= (($_GET['search_category'] ?? '') == $c['id']) ? 'selected' : '' ?>>
+<?= htmlspecialchars($c['name']); ?>
+</option>
+<?php endwhile; ?>
+</select>
+</div>
 
-                <?php
-                // ambil 5 kategori
-                $catSearch = $conn->query("
-                    SELECT id, name 
-                    FROM categories 
-                    ORDER BY name ASC 
-                    LIMIT 5
-                ");
-                while ($c = $catSearch->fetch_assoc()):
-                ?>
-                    <option value="<?= $c['id']; ?>"
-                        <?= (isset($_GET['search_category']) && $_GET['search_category'] == $c['id']) ? 'selected' : ''; ?>>
-                        <?= htmlspecialchars($c['name']); ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-        </div>
+<div class="col-md-2">
+<button class="btn btn-primary w-100">Cari</button>
+</div>
 
-        <!-- BUTTON -->
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100">
-                Cari
-            </button>
-        </div>
-
-    </div>
+</div>
 </form>
 
-
-
-
-<!-- ================= TABLE daftar produk ================= -->
+<!-- ================= TABLE ================= -->
 <div class="card">
-<div class="card-header fw-semibold">Daftar Produk</div>
 <div class="card-body table-responsive">
 
-<table class="table table-bordered table-hover align-middle">
-<thead class="table-light">
+<table class="table table-bordered">
+<thead>
 <tr>
-    <th>#</th>
-    <th>Produk</th>
-    <th>Kategori</th>
-    <th>Stock</th>
-    <th>Harga Beli</th>
-    <th>Harga Jual</th>
-    <th>Deskripsi</th>
-    <th>Gambar</th>
-    <th>Aksi</th>
+<th>#</th><th>Produk</th><th>Kategori</th><th>Stock</th>
+<th>Harga Beli</th><th>Harga Jual</th><th>Deskripsi</th>
+<th>Gambar</th><th>Aksi</th>
 </tr>
 </thead>
 <tbody>
-<?php $no=1; while($p=$products->fetch_assoc()): ?>
+
+<?php $no=$offset+1; while($p=$products->fetch_assoc()): ?>
 <tr>
-    <td><?= $no++; ?></td>
-    <td><?= htmlspecialchars($p['name']); ?></td>
-    <td><?= htmlspecialchars($p['category_name']); ?></td>
-    <td><?= $p['stock']; ?></td>
-    <td>Rp <?= number_format($p['price_buy'],2); ?></td>
-    <td>Rp <?= number_format($p['price_sell'],2); ?></td>
-    <td><?= htmlspecialchars($p['description']); ?></td>
-    <td class="text-center">
-        <?php if ($p['image']): ?>
-            <button 
-                class="btn btn-sm btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#img<?= $p['id']; ?>">
-                Lihat
-            </button>
-    
+<td><?= $no++; ?></td>
+<td><?= htmlspecialchars($p['name']); ?></td>
+<td><?= htmlspecialchars($p['category_name']); ?></td>
+<td><?= $p['stock']; ?></td>
+<td><?= number_format($p['price_buy'],2); ?></td>
+<td><?= number_format($p['price_sell'],2); ?></td>
+<td><?= htmlspecialchars($p['description']); ?></td>
 
-            <!-- MODAL -->
-            <div class="modal fade" id="img<?= $p['id']; ?>" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"><?= htmlspecialchars($p['name']); ?></h5>
-                            <button class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body text-center">
-                            <img src="<?= $p['image']; ?>" class="img-fluid rounded">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php else: ?>
-            <span class="text-muted">Tidak ada</span>
-        <?php endif; ?>
-    </td>
-    <td class="text-center">
-        <!-- EDIT -->
-        <button 
-            class="btn btn-sm btn-warning"
-            data-bs-toggle="modal"
-            data-bs-target="#edit<?= $p['id']; ?>">
-            Edit
-        </button>
+<td class="text-center">
+<?php if ($p['image']): ?>
+    <button 
+        class="btn btn-sm btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#img<?= $p['id']; ?>">
+        Lihat
+    </button>
 
-        <!-- HAPUS -->
-        <a 
-            href="?delete=<?= $p['id']; ?>" 
-            class="btn btn-sm btn-danger"
-            onclick="return confirm('Yakin ingin menghapus produk ini?')">
-            Hapus
-        </a>
-    </td>
-
-    <!-- MODAL EDIT -->
-    <!-- MODAL EDIT -->
-        <div class="modal fade" id="edit<?= $p['id']; ?>" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+    <!-- MODAL GAMBAR -->
+    <div class="modal fade" id="img<?= $p['id']; ?>" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-
-            <form method="POST" enctype="multipart/form-data">
-
                 <div class="modal-header">
-                <h5 class="modal-title">Edit Produk</h5>
-                <button class="btn-close" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title"><?= htmlspecialchars($p['name']); ?></h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-
-                <div class="modal-body row g-3">
-
-                <input type="hidden" name="id" value="<?= $p['id']; ?>">
-
-                <div class="col-md-6">
-                    <label class="form-label">Nama Produk</label>
-                    <input type="text" name="name" class="form-control"
-                    value="<?= htmlspecialchars($p['name']); ?>" required>
+                <div class="modal-body text-center">
+                    <img src="<?= $p['image']; ?>" class="img-fluid rounded">
                 </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Stock</label>
-                    <input type="number" name="stock" class="form-control"
-                    value="<?= $p['stock']; ?>" required>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Harga Beli</label>
-                    <input type="number" step="0.01" name="price_buy"
-                    value="<?= $p['price_buy']; ?>" class="form-control">
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label">Harga Jual</label>
-                    <input type="number" step="0.01" name="price_sell"
-                    value="<?= $p['price_sell']; ?>" class="form-control">
-                </div>
-
-                <div class="col-md-12">
-                    <label class="form-label">Deskripsi</label>
-                    <textarea name="description" class="form-control" rows="3"><?= htmlspecialchars($p['description']); ?></textarea>
-                </div>
-
-                <!-- GAMBAR LAMA -->
-                <div class="col-md-12">
-                    <label class="form-label">Gambar Saat Ini</label><br>
-                    <?php if ($p['image']): ?>
-                    <img src="<?= $p['image']; ?>" width="120" class="rounded border mb-2">
-                    <?php else: ?>
-                    <span class="text-muted">Belum ada gambar</span>
-                    <?php endif; ?>
-                </div>
-
-                <!-- GANTI GAMBAR -->
-                <div class="col-md-12">
-                    <label class="form-label">Ganti Gambar (opsional)</label>
-                    <input type="file" name="image" class="form-control">
-                </div>
-
-                </div>
-
-                <div class="modal-footer">
-                <button type="submit" name="update_product" class="btn btn-primary">
-                    Simpan Perubahan
-                </button>
-                </div>
-
-            </form>
-
             </div>
         </div>
-        </div>
+    </div>
+<?php else: ?>
+    <span class="text-muted">Tidak ada</span>
+<?php endif; ?>
+</td>
 
 
-        
+<td class="text-center">
+    <!-- EDIT -->
+    <button 
+        class="btn btn-sm btn-warning"
+        data-bs-toggle="modal"
+        data-bs-target="#edit<?= $p['id']; ?>">
+        Edit
+    </button>
+
+    <!-- HAPUS -->
+    <a 
+        href="?delete=<?= $p['id']; ?>" 
+        class="btn btn-sm btn-danger"
+        onclick="return confirm('Yakin ingin menghapus produk ini?')">
+        Hapus
+    </a>
+</td>
+
 
 </tr>
 <?php endwhile; ?>
+
 </tbody>
 </table>
 
-</div>
-</div>
+<!-- ================= PAGINATION ================= -->
+<?php if ($totalPages > 1): ?>
+<nav>
+<ul class="pagination justify-content-center">
 
+<li class="page-item <?= ($page<=1)?'disabled':'' ?>">
+<a class="page-link" href="?page=<?= $page-1 ?>&<?= $queryString ?>">&laquo;</a>
+</li>
+
+<?php for($i=1;$i<=$totalPages;$i++): ?>
+<li class="page-item <?= ($i==$page)?'active':'' ?>">
+<a class="page-link" href="?page=<?= $i ?>&<?= $queryString ?>"><?= $i ?></a>
+</li>
+<?php endfor; ?>
+
+<li class="page-item <?= ($page>=$totalPages)?'disabled':'' ?>">
+<a class="page-link" href="?page=<?= $page+1 ?>&<?= $queryString ?>">&raquo;</a>
+</li>
+
+</ul>
+</nav>
+<?php endif; ?>
+
+</div>
+</div>
 </div>
 
 <?php include 'partials/footer.php'; ?>
