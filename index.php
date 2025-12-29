@@ -29,7 +29,22 @@ $qProd = $conn->query("
 while ($p = $qProd->fetch_assoc()) {
     $products[$p['category_id']][] = $p;
 }
+
+/* ======================
+   AMBIL DATA PROMO
+====================== */
+$promos = $conn->query("
+    SELECT *
+    FROM promos
+    WHERE is_active = 1
+    ORDER BY created_at DESC
+    LIMIT 20
+");
+
+if (!$promos) {
+    die("Query promo error: " . $conn->error);}
 ?>
+
 
 
 
@@ -342,52 +357,84 @@ while ($p = $qProd->fetch_assoc()) {
   </div>
 
   <!-- offer section -->
-  <section class="offer_section layout_padding-bottom">
-    <div class="offer_container">
-      <div class="container ">
-        <div class="row">
-          <div class="col-md-6  ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/o1.jpg" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Koleksi Pohon Musim Dingin
-                </h5>
-                <h6>
-                  <span>20%</span> Off
-                </h6>
-                <a href="">
-                  Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6  ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/o2.webp" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Karya Seni Rimbun Tropis
-                </h5>
-                <h6>
-                  <span>15%</span> Off
-                </h6>
-                <a href="">
-                  Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- OFFER SECTION -->
+<section class="offer_section layout_padding-bottom">
+  <div class="offer_container">
+    <div class="container">
+      <div class="row">
+
+<?php while ($p = $promos->fetch_assoc()): ?>
+
+<?php
+  $priceNormal = (float) $p['price_normal'];
+
+  if ($p['discount_type'] === 'percent') {
+      $discountPercent = (float) $p['discount_value'];
+      $discountAmount  = $priceNormal * ($discountPercent / 100);
+  } else {
+      $discountAmount  = (float) $p['discount_value'];
+      $discountPercent = round(($discountAmount / $priceNormal) * 100);
+  }
+
+  $priceAfter = $priceNormal - $discountAmount;
+
+  // WA
+  $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
+
+  $waText = urlencode(
+    "Halo Admin,\n" .
+    "Saya tertarik dengan tanaman ini:\n" .
+    $p['product_name'] . "\n" .
+    "Harga Normal: Rp" . number_format($priceNormal,0,',','.') . "\n" .
+    "Harga Promo: Rp" . number_format($priceAfter,0,',','.') . "\n" .
+    "Saya ingin bernego dengan anda.\n\n" .
+    "Gambar:\n" . $imageUrl
+  );
+
+  $waLink = "https://wa.me/6288239468557?text=" . $waText;
+?>
+
+<div class="col-md-6 mb-4">
+  <div class="box">
+    <div class="img-box">
+      <img src="uploads/promos/<?= htmlspecialchars($p['image']) ?>"
+           alt="<?= htmlspecialchars($p['product_name']) ?>">
+    </div>
+
+    <div class="detail-box">
+      <h5><?= htmlspecialchars($p['product_name']) ?></h5>
+
+      <h6>
+        <span style="text-decoration:line-through; color:#aaa;">
+          Rp<?= number_format($priceNormal,0,',','.') ?>
+        </span>
+        <br>
+
+        <strong style="color:#ffc107;">
+          Rp<?= number_format($priceAfter,0,',','.') ?>
+        </strong>
+        <small>(<?= $discountPercent ?>% OFF)</small>
+      </h6>
+
+      <a href="<?= $waLink ?>" target="_blank">
+        Order Now
+      </a>
+    </div>
+  </div>
+</div>
+
+<?php endwhile; ?>
+
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+
+
+
+
+
 <!-- ================= MENU ================= -->
   <section class="food_section layout_padding" style="padding:0px 0px" >
   <div class="container-fluid">

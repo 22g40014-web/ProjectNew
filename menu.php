@@ -1,28 +1,20 @@
 <?php
 require_once 'admin/config/db.php';
 
+
 /* ======================
    AMBIL DATA PROMO
 ====================== */
-$promos = [];
-$qPromo = $conn->query("
-    SELECT 
-        product_name,
-        title,
-        price_normal,
-        discount_type,
-        discount_value,
-        price_after,
-        image
+$promos = $conn->query("
+    SELECT *
     FROM promos
     WHERE is_active = 1
     ORDER BY created_at DESC
-    LIMIT 10
+    LIMIT 20
 ");
 
-while ($row = $qPromo->fetch_assoc()) {
-    $promos[] = $row;
-}
+if (!$promos) {
+    die("Query promo error: " . $conn->error);}
 
 
 /* =====================
@@ -187,53 +179,78 @@ while ($p = $qProd->fetch_assoc()) {
 </div>
 
   <!-- offer section -->
-  <!-- offer section -->
-<section class="offer_section layout_padding-bottom">
+  <section class="offer_section layout_padding-bottom">
   <div class="offer_container">
     <div class="container">
       <div class="row">
 
-        <?php if (!empty($promos)) : ?>
-          <?php foreach ($promos as $promo) : ?>
+<?php while ($p = $promos->fetch_assoc()): ?>
 
-            <div class="col-md-6">
-              <div class="box">
-                <div class="img-box">
-                  <img src="uploads/promos/<?= htmlspecialchars($promo['image']) ?>" alt="">
-                </div>
+<?php
+  $priceNormal = (float) $p['price_normal'];
 
-                <div class="detail-box">
-                  <h5>
-                    <?= htmlspecialchars($promo['product_name']) ?>
-                  </h5>
+  if ($p['discount_type'] === 'percent') {
+      $discountPercent = (float) $p['discount_value'];
+      $discountAmount  = $priceNormal * ($discountPercent / 100);
+  } else {
+      $discountAmount  = (float) $p['discount_value'];
+      $discountPercent = round(($discountAmount / $priceNormal) * 100);
+  }
 
-                  <h6>
-                    <?php if ($promo['discount_type'] == 'percent') : ?>
-                      <span><?= (int)$promo['discount_value'] ?>%</span> Off
-                    <?php else : ?>
-                      <span>Rp <?= number_format($promo['discount_value'], 0, ',', '.') ?></span> Off
-                    <?php endif; ?>
-                  </h6>
+  $priceAfter = $priceNormal - $discountAmount;
 
-                  <a href="https://wa.me/6288239468557?text=Saya%20tertarik%20promo%20<?= urlencode($promo['product_name']) ?>">
-                    Order Now
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 456.029 456.029">
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
+  // WA
+  $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
 
-          <?php endforeach; ?>
-        <?php else : ?>
-          <p style="text-align:center; width:100%;">Promo belum tersedia</p>
-        <?php endif; ?>
+  $waText = urlencode(
+    "Halo Admin,\n" .
+    "Saya tertarik dengan tanaman ini:\n" .
+    $p['product_name'] . "\n" .
+    "Harga Normal: Rp" . number_format($priceNormal,0,',','.') . "\n" .
+    "Harga Promo: Rp" . number_format($priceAfter,0,',','.') . "\n" .
+    "Saya ingin bernego dengan anda.\n\n" .
+    "Gambar:\n" . $imageUrl
+  );
+
+  $waLink = "https://wa.me/628XXXXXXXXX?text=" . $waText;
+?>
+
+<div class="col-md-6 mb-4">
+  <div class="box">
+    <div class="img-box">
+      <img src="uploads/promos/<?= htmlspecialchars($p['image']) ?>"
+           alt="<?= htmlspecialchars($p['product_name']) ?>">
+    </div>
+
+    <div class="detail-box">
+      <h5><?= htmlspecialchars($p['product_name']) ?></h5>
+
+      <h6>
+        <span style="text-decoration:line-through; color:#aaa;">
+          Rp<?= number_format($priceNormal,0,',','.') ?>
+        </span>
+        <br>
+
+        <strong style="color:#ffc107;">
+          Rp<?= number_format($priceAfter,0,',','.') ?>
+        </strong>
+        <small>(<?= $discountPercent ?>% OFF)</small>
+      </h6>
+
+      <a href="<?= $waLink ?>" target="_blank">
+        Order Now
+      </a>
+    </div>
+  </div>
+</div>
+
+<?php endwhile; ?>
 
       </div>
     </div>
   </div>
 </section>
+
 
 
 <!-- ================= MENU ================= -->
