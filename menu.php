@@ -202,6 +202,24 @@ while ($p = $qProd->fetch_assoc()) {
   box-shadow: 0 8px 25px rgba(0,0,0,.15);
 }
 
+/* ===============================
+   PROMO / DISKON SCROLL
+   =============================== */
+.promo-scroll {
+  max-height: 520px;      /* tinggi tetap */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+}
+
+/* Scrollbar promo */
+.promo-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.promo-scroll::-webkit-scrollbar-thumb {
+  background: #ffbe33;
+  border-radius: 10px;
+}
 </style>
 </head>
 
@@ -240,7 +258,9 @@ while ($p = $qProd->fetch_assoc()) {
   <section class="offer_section layout_padding-bottom">
   <div class="offer_container">
     <div class="container">
-      <div class="row">
+      <div class="promo-scroll">
+        <div class="row">
+
 
 <?php while ($p = $promos->fetch_assoc()): ?>
 
@@ -307,6 +327,7 @@ while ($p = $qProd->fetch_assoc()) {
       </div>
     </div>
   </div>
+</div>
 </section>
 
 
