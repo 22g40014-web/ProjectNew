@@ -23,6 +23,7 @@ $qProd = $conn->query("
     JOIN categories c ON c.id = p.category_id
     LEFT JOIN product_images pi ON pi.product_id = p.id
     WHERE p.is_active = 1
+    AND p.show_in_menu = 1
     ORDER BY p.created_at DESC
 ");
 

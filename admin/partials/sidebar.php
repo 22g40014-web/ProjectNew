@@ -26,12 +26,6 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="tools_material.php" class="nav-link text-white">
-                        <i class="bi bi-tools me-2"></i> Alat & Bahan
-                    </a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link text-white" href="category.php">
                         <i class="bi bi-tags me-2"></i> Categories
                     </a>
