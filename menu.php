@@ -11,7 +11,7 @@ while ($c = $qCat->fetch_assoc()) {
 }
 
 /* =====================
-   AMBIL PRODUK (GROUP PER KATEGORI)
+   AMBIL PRODUK
 ===================== */
 $products = [];
 $qProd = $conn->query("
@@ -38,25 +38,24 @@ while ($p = $qProd->fetch_assoc()) {
 <title>Menu</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- CSS ASLI TEMPLATE -->
 <link rel="stylesheet" href="css/bootstrap.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 <link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
 <link href="css/responsive.css" rel="stylesheet">
 
-<!-- STYLE KHUSUS MENU -->
 <style>
+/* ===============================
+   MENU STYLE
+   =============================== */
 .menu-nav .btn {
   border-radius: 30px;
   margin: 5px;
-  transition: .3s ease;
 }
+
 .menu-nav .btn.active {
   background: #ffbe33;
   color: #000;
-  box-shadow: 0 5px 15px rgba(255,190,51,.4);
-  transform: translateY(-2px);
 }
 
 .menu-card {
@@ -78,56 +77,21 @@ while ($p = $qProd->fetch_assoc()) {
   object-fit: cover;
 }
 
-.owl-item {
-  min-height: 420px;
-}
-
 .empty-category {
   min-height: 300px;
-  display: flex;
-  flex-direction: column;
+  display: none;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   color: #999;
 }
 
-.empty-category i {
-  font-size: 48px;
-  color: #ffbe33;
-  margin-bottom: 10px;
-}
-
-.menu-nav .btn {
-  border-radius: 30px;
-  margin: 5px;
-  transition: .3s ease;
-}
-
-/* CSS LAMA KAMU */
-.menu-card {
-  border-radius: 15px;
-  overflow: hidden;
-  background: #fff;
-  box-shadow: 0 4px 15px rgba(0,0,0,.08);
-  height: 100%;
-}
-
 /* ===============================
-   TAMBAHKAN DI PALING BAWAH
+   CAROUSEL FIX
    =============================== */
-
 #menuCarousel {
   max-width: 1300px;
-  margin: 0 auto;
-  overflow: hidden;
-  padding: 10px 0 30px;
-}
-
-#menuCarousel .item {
-  width: 100%;
-}
-
-#menuCarousel .owl-stage-outer {
+  margin: auto;
   overflow: hidden;
 }
 
@@ -136,30 +100,42 @@ while ($p = $qProd->fetch_assoc()) {
   margin-right: 15px;
 }
 
-/* Tablet */
-@media (max-width: 991px) {
-  #menuCarousel {
-    max-width: 95%;
-  }
+#menuCarousel .owl-stage-outer {
+  overflow: hidden;
 }
 
-/* Mobile */
-@media (max-width: 575px) {
-  #menuCarousel {
-    max-width: 100%;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
+/* ===============================
+   SEARCH BAR
+   =============================== */
+#searchProduct {
+  border-radius: 30px;
+  padding: 12px 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,.1);
+}
+
+/* ===============================
+   STICKY NAVBAR
+   =============================== */
+.header_section {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  transition: .3s ease;
+}
+
+.header_section.sticky-active {
+  background: rgba(0,0,0,.9);
+  box-shadow: 0 5px 20px rgba(0,0,0,.3);
 }
 </style>
 </head>
 
 <body class="sub_page">
 
-<!-- ================= HERO + NAVBAR (ASLI) ================= -->
+<!-- ================= HEADER ================= -->
 <div class="hero_area">
   <div class="bg-box">
-    <img src="images/hero-pg.jpg" alt="">
+    <img src="images/hero-pg.jpg">
   </div>
 
   <header class="header_section">
@@ -168,7 +144,6 @@ while ($p = $qProd->fetch_assoc()) {
         <a class="navbar-brand" href="index.php">
           <span>CHABA BONSAI</span>
         </a>
-
         <div class="collapse navbar-collapse">
           <ul class="navbar-nav mx-auto">
             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
@@ -190,108 +165,110 @@ while ($p = $qProd->fetch_assoc()) {
 <section class="food_section layout_padding">
 <div class="container">
 
-  <div class="heading_container heading_center mb-4">
-    <h2>Our Menu</h2>
+<h2 class="text-center mb-4">Our Menu</h2>
+
+<!-- NAV KATEGORI -->
+<div class="text-center menu-nav mb-3">
+<?php foreach ($categories as $i => $c): ?>
+  <button class="btn btn-outline-warning <?= $i==0?'active':'' ?>" data-index="<?= $i ?>">
+    <?= htmlspecialchars($c['name']) ?>
+  </button>
+<?php endforeach; ?>
+</div>
+
+<!-- SEARCH -->
+<div class="row justify-content-center mb-4">
+  <div class="col-md-5">
+    <input type="text" id="searchProduct" class="form-control text-center"
+           placeholder="Cari produk berdasarkan nama...">
   </div>
+</div>
 
-  <!-- NAV KATEGORI -->
-  <div class="text-center menu-nav mb-4">
-    <?php foreach ($categories as $i => $c): ?>
-      <button class="btn btn-outline-warning <?= $i === 0 ? 'active' : '' ?>"
-              data-index="<?= $i; ?>">
-        <?= htmlspecialchars($c['name']); ?>
-      </button>
-    <?php endforeach; ?>
+<!-- CAROUSEL -->
+<div class="owl-carousel owl-theme" id="menuCarousel">
+
+<?php foreach ($categories as $c): ?>
+<div class="item">
+<h3 class="text-center mb-4"><?= htmlspecialchars($c['name']) ?></h3>
+
+<div class="row justify-content-center">
+<?php if (!empty($products[$c['id']])): ?>
+<?php foreach ($products[$c['id']] as $p):
+$image = 'assets/images/no-image.png';
+if (!empty($p['image'])) {
+  $path = 'admin/uploads/products/'.basename($p['image']);
+  if (file_exists($path)) $image = $path;
+}
+?>
+<div class="col-sm-6 col-lg-4 mb-4 product-item"
+     data-name="<?= strtolower($p['name']) ?>">
+<div class="menu-card">
+  <div class="img-box"><img src="<?= $image ?>"></div>
+  <div class="p-3 text-center">
+    <h5><?= htmlspecialchars($p['name']) ?></h5>
+    <p><?= htmlspecialchars($p['description']) ?></p>
+    <h6 class="text-warning">Rp <?= number_format($p['price_sell'],0,',','.') ?></h6>
   </div>
+</div>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
 
-  <!-- CAROUSEL -->
-  <div class="owl-carousel owl-theme" id="menuCarousel">
+<div class="empty-category">
+  <i class="fa fa-search fa-3x text-warning mb-2"></i>
+  <h6>Produk tidak ditemukan</h6>
+</div>
 
-    <?php foreach ($categories as $c): ?>
-    <div class="item">
-      <h3 class="text-center mb-4 fw-bold"><?= htmlspecialchars($c['name']); ?></h3>
+</div>
+</div>
+<?php endforeach; ?>
 
-      <div class="row justify-content-center">
-        <?php if (!empty($products[$c['id']])): ?>
-          <?php foreach ($products[$c['id']] as $p):
-
-            $image = 'assets/images/no-image.png';
-            if (!empty($p['image'])) {
-              $file = basename($p['image']);
-              $path = 'admin/uploads/products/' . $file;
-              if (file_exists(__DIR__ . '/' . $path)) {
-                $image = $path;
-              }
-            }
-          ?>
-          <div class="col-sm-6 col-lg-4 mb-4">
-            <div class="menu-card">
-              <div class="img-box">
-                <img src="<?= htmlspecialchars($image); ?>">
-              </div>
-              <div class="p-3 text-center">
-                <h5><?= htmlspecialchars($p['name']); ?></h5>
-                <p><?= htmlspecialchars($p['description']); ?></p>
-                <h6 class="text-warning fw-bold">
-                  Rp <?= number_format($p['price_sell'],0,',','.'); ?>
-                </h6>
-              </div>
-            </div>
-          </div>
-          <?php endforeach; ?>
-        <?php else: ?>
-          <div class="empty-category">
-            <i class="fa fa-dropbox"></i>
-            <h5>Produk belum tersedia</h5>
-            <p>Silakan pilih kategori lain</p>
-          </div>
-        <?php endif; ?>
-      </div>
-    </div>
-    <?php endforeach; ?>
-
-  </div>
+</div>
 </div>
 </section>
 
-<!-- ================= FOOTER (ASLI) ================= -->
-<footer class="footer_section">
-  <div class="container text-center">
-    <p class="text-white mb-0">
-      &copy; <?= date('Y'); ?> CHABA BONSAI
-    </p>
-  </div>
-</footer>
-
-<!-- JS -->
+<!-- ================= JS ================= -->
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 
 <script>
-$(function () {
+$(function(){
 
-  const owl = $('#menuCarousel').owlCarousel({
-    items: 1,
-    loop: false,
-    dots: false,
-    nav: false,
-    smartSpeed: 600
+const owl = $('#menuCarousel').owlCarousel({
+  items:1,
+  dots:false,
+  nav:false,
+  smartSpeed:600
+});
+
+$('.menu-nav .btn').click(function(){
+  owl.trigger('to.owl.carousel', [$(this).data('index'),500]);
+  $('.menu-nav .btn').removeClass('active');
+  $(this).addClass('active');
+});
+
+/* SEARCH */
+$('#searchProduct').on('keyup', function(){
+  let key = $(this).val().toLowerCase();
+
+  $('#menuCarousel .item').each(function(){
+    let found = false;
+    $(this).find('.product-item').each(function(){
+      if($(this).data('name').includes(key)){
+        $(this).show(); found = true;
+      } else {
+        $(this).hide();
+      }
+    });
+    $(this).find('.empty-category').toggle(!found);
   });
+});
 
-  $('.menu-nav .btn').click(function () {
-    let index = $(this).data('index');
-    owl.trigger('to.owl.carousel', [index, 500]);
-
-    $('.menu-nav .btn').removeClass('active');
-    $(this).addClass('active');
-  });
-
-  owl.on('changed.owl.carousel', function (event) {
-    let index = event.item.index;
-    $('.menu-nav .btn').removeClass('active');
-    $('.menu-nav .btn').eq(index).addClass('active');
-  });
+/* STICKY */
+$(window).on('scroll', function(){
+  $('.header_section').toggleClass('sticky-active', $(this).scrollTop()>50);
+});
 
 });
 </script>
