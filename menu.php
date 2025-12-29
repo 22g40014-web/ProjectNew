@@ -96,6 +96,61 @@ while ($p = $qProd->fetch_assoc()) {
   color: #ffbe33;
   margin-bottom: 10px;
 }
+
+.menu-nav .btn {
+  border-radius: 30px;
+  margin: 5px;
+  transition: .3s ease;
+}
+
+/* CSS LAMA KAMU */
+.menu-card {
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,.08);
+  height: 100%;
+}
+
+/* ===============================
+   TAMBAHKAN DI PALING BAWAH
+   =============================== */
+
+#menuCarousel {
+  max-width: 1300px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 10px 0 30px;
+}
+
+#menuCarousel .item {
+  width: 100%;
+}
+
+#menuCarousel .owl-stage-outer {
+  overflow: hidden;
+}
+
+#menuCarousel .row {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  #menuCarousel {
+    max-width: 95%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 575px) {
+  #menuCarousel {
+    max-width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
 </style>
 </head>
 
