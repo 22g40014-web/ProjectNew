@@ -75,6 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
 if (isset($_POST['update_product'])) {
 
     $id = (int)$_POST['id'];
+    $category_id = (int)$_POST['category_id']; // ⬅ TAMBAHAN
     $name = $_POST['name'];
     $stock = $_POST['stock'];
     $price_buy = $_POST['price_buy'];
@@ -84,6 +85,7 @@ if (isset($_POST['update_product'])) {
 
     $conn->query("
         UPDATE products SET
+            category_id='$category_id',
             name='$name',
             stock='$stock',
             price_buy='$price_buy',
@@ -212,12 +214,28 @@ include 'partials/sidebar.php';
 <div class="col-md-6">
 <label>Kategori</label>
 <select name="category_id" class="form-select" required>
-<option value="">-- Pilih Kategori --</option>
-<?php while($c=$categories->fetch_assoc()): ?>
-<option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?></option>
+<?php
+$cats = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
+while ($cat = $cats->fetch_assoc()):
+?>
+<option value="<?= $cat['id']; ?>"
+<?= ($cat['id'] == $p['category_id']) ? 'selected' : ''; ?>>
+<?= htmlspecialchars($cat['name']); ?>
+</option>
 <?php endwhile; ?>
 </select>
 </div>
+
+<!-- ==<div class="col-md-6">
+<label>Kategori</label>
+<select name="category_id" class="form-select" required>
+<option value="">-- Pilih Kategori --</option>
+<?php while($c=$categories->fetch_assoc()): ?>
+<option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?>
+</option>
+<?php endwhile; ?>
+</select>
+</div> == -->
 
 <div class="col-md-12">
 <label>Deskripsi</label>
@@ -355,6 +373,7 @@ while($c=$cat5->fetch_assoc()):
 </tr>
 
 <!-- ================= MODAL EDIT ================= -->
+<!-- ================= MODAL EDIT ================= -->
 <div class="modal fade" id="edit<?= $p['id']; ?>" tabindex="-1">
 <div class="modal-dialog modal-lg modal-dialog-centered">
 <div class="modal-content">
@@ -370,35 +389,57 @@ while($c=$cat5->fetch_assoc()):
 
 <input type="hidden" name="id" value="<?= $p['id']; ?>">
 
+<!-- KATEGORI -->
+<div class="col-md-6">
+<label>Kategori</label>
+<select name="category_id" class="form-select" required>
+<?php
+$catEdit = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
+while ($c = $catEdit->fetch_assoc()):
+?>
+<option value="<?= $c['id']; ?>"
+<?= ($c['id'] == $p['category_id']) ? 'selected' : ''; ?>>
+<?= htmlspecialchars($c['name']); ?>
+</option>
+<?php endwhile; ?>
+</select>
+</div>
+
+<!-- NAMA PRODUK -->
 <div class="col-md-6">
 <label>Nama Produk</label>
 <input type="text" name="name" class="form-control"
 value="<?= htmlspecialchars($p['name']); ?>" required>
 </div>
 
+<!-- STOCK -->
 <div class="col-md-6">
 <label>Stock</label>
 <input type="number" name="stock" class="form-control"
 value="<?= $p['stock']; ?>" required>
 </div>
 
+<!-- HARGA BELI -->
 <div class="col-md-6">
 <label>Harga Beli</label>
 <input type="number" step="0.01" name="price_buy"
-value="<?= $p['price_buy']; ?>" class="form-control">
+value="<?= $p['price_buy']; ?>" class="form-control" required>
 </div>
 
+<!-- HARGA JUAL -->
 <div class="col-md-6">
 <label>Harga Jual</label>
 <input type="number" step="0.01" name="price_sell"
-value="<?= $p['price_sell']; ?>" class="form-control">
+value="<?= $p['price_sell']; ?>" class="form-control" required>
 </div>
 
+<!-- DESKRIPSI -->
 <div class="col-md-12">
 <label>Deskripsi</label>
-<textarea name="description" class="form-control"><?= htmlspecialchars($p['description']); ?></textarea>
+<textarea name="description" class="form-control" required><?= htmlspecialchars($p['description']); ?></textarea>
 </div>
 
+<!-- GAMBAR SAAT INI -->
 <div class="col-md-12">
 <label>Gambar Saat Ini</label><br>
 <?php if ($p['image']): ?>
@@ -408,6 +449,7 @@ value="<?= $p['price_sell']; ?>" class="form-control">
 <?php endif; ?>
 </div>
 
+<!-- GANTI GAMBAR -->
 <div class="col-md-12">
 <label>Ganti Gambar</label>
 <input type="file" name="image" class="form-control">
@@ -427,6 +469,7 @@ Simpan Perubahan
 </div>
 </div>
 <!-- ================= END MODAL EDIT ================= -->
+
 
 <?php endwhile; ?>
 </tbody>
