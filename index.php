@@ -292,7 +292,52 @@ while ($p = $qProd->fetch_assoc()) {
   </div>
 
   <!-- offer section -->
-  
+  <section class="offer_section layout_padding-bottom">
+    <div class="offer_container">
+      <div class="container ">
+        <div class="row">
+          <div class="col-md-6  ">
+            <div class="box ">
+              <div class="img-box">
+                <img src="images/o1.jpg" alt="">
+              </div>
+              <div class="detail-box">
+                <h5>
+                  Koleksi Pohon Musim Dingin
+                </h5>
+                <h6>
+                  <span>20%</span> Off
+                </h6>
+                <a href="">
+                  Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6  ">
+            <div class="box ">
+              <div class="img-box">
+                <img src="images/o2.webp" alt="">
+              </div>
+              <div class="detail-box">
+                <h5>
+                  Karya Seni Rimbun Tropis
+                </h5>
+                <h6>
+                  <span>15%</span> Off
+                </h6>
+                <a href="">
+                  Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 <!-- ================= MENU ================= -->
   <section class="food_section layout_padding">
   <div class="container">
