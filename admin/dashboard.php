@@ -51,6 +51,20 @@ if ($page > $totalPages) {
     $offset = ($page - 1) * $limit;
 }
 
+$show_in_menu = isset($_POST['show_in_menu']) ? 1 : 0;
+if (isset($_GET['toggle_menu'])) {
+    $id = (int) $_GET['toggle_menu'];
+
+    $conn->query("
+        UPDATE products
+        SET show_in_menu = IF(show_in_menu = 1, 0, 1)
+        WHERE id = $id
+    ");
+
+    header("Location: dashboard.php");
+    exit;
+}
+
 /* =========================
    QUERY DATA
 ========================= */
@@ -62,6 +76,7 @@ $products = $conn->query("
         p.price_buy,
         p.price_sell,
         p.description,
+        p.show_in_menu,
         c.name AS category_name,
         pi.image
     FROM products p
@@ -135,6 +150,8 @@ $baseQuery = http_build_query($queryParams);
     <th>Harga Jual</th>
     <th>Deskripsi</th>
     <th>Gambar</th>
+    <th>Tampil di Menu</th>
+
 </tr>
 </thead>
 <tbody>
@@ -156,6 +173,22 @@ $baseQuery = http_build_query($queryParams);
             <span class="text-muted">Tidak ada</span>
         <?php endif; ?>
     </td>
+    <td class="text-center">
+        <a href="dashboard.php?toggle_menu=<?= $p['id']; ?>"
+        class="btn btn-sm <?= $p['show_in_menu'] ? 'btn-success' : 'btn-secondary'; ?>"
+        onclick="return confirm('Ubah status tampilan menu produk ini?')">
+            <?= $p['show_in_menu'] ? 'Tampil' : 'Disembunyikan'; ?>
+        </a>
+    </td>
+<!-- ================= TAMBAHKAN DI FORM ADD / EDIT =============== -->
+<!--     <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="show_in_menu" value="1" checked>
+        <label class="form-check-label">
+            Tampilkan di Menu
+        </label>
+    </div>
+        --> 
+
 </tr>
 <?php endwhile; ?>
 <?php else: ?>

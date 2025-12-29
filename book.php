@@ -1,235 +1,136 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="id">
 <head>
-  <!-- Basic -->
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Site Metas -->
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <title> 3MasKentir </title>
+<title>3MasKentir - Book</title>
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<link rel="shortcut icon" href="images/favicon.png">
 
-  <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <!-- font awesome style -->
-  <link href="css/font-awesome.min.css" rel="stylesheet" />
+<!-- BOOTSTRAP -->
+<link rel="stylesheet" href="css/bootstrap.css">
 
-  <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
-  <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+<!-- OWL CAROUSEL -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
 
+<!-- FONT AWESOME -->
+<link rel="stylesheet" href="css/font-awesome.min.css">
+
+<!-- TEMPLATE CSS -->
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body class="sub_page">
 
-  <div class="hero_area">
-    <div class="bg-box">
-      <img src="images/hero-pg.jpg" alt="">
-    </div>
-    <!-- header section strats -->
-    <header class="header_section">
-      <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.php">
-            <span>
-              3MasKentir
-            </span>
-          </a>
-
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav  mx-auto ">
-              <li class="nav-item">
-                <a class="nav-link" href="index.php">Home </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="menu.php">Menu</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="about.php">About</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="book.php">Book Table <span class="sr-only">(current)</span> </a>
-              </li>
-            </ul>
-            <div class="user_option">
-              <a href="" class="user_link">
-                <i class="fa fa-user" aria-hidden="true"></i>
-              </a>
-              <a class="cart_link" href="#">
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                </svg>
-              </a>
-              <form class="form-inline">
-                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-              </form>
-              <a href="" class="order_online">
-                Order Online
-              </a>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </header>
-    <!-- end header section -->
+<!-- ================= HEADER ================= -->
+<div class="hero_area">
+  <div class="bg-box">
+    <img src="images/hero-pg.jpg" alt="">
   </div>
 
-  <!-- book section -->
-  <section class="book_section layout_padding">
+  <header class="header_section">
     <div class="container">
-      <div class="heading_container">
-        <h2>
-          Mau Mengunjungi ?
-        </h2>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form_container">
-            <form action="">
-              <div>
-                <input type="text" class="form-control" placeholder="Your Name" />
-              </div>
-              <div>
-                <input type="text" class="form-control" placeholder="Phone Number" />
-              </div>
-              <div>
-                <input type="email" class="form-control" placeholder="Your Email" />
-              </div>
-              <div>
-                <input type="date" class="form-control">
-              </div>
-              <div class="btn_box">
-                <button>
-                  Book Now
-                </button>
-              </div>
-            </form>
-          </div>
+      <nav class="navbar navbar-expand-lg custom_nav-container">
+        <a class="navbar-brand" href="index.php">3MasKentir</a>
+
+        <div class="collapse navbar-collapse">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+            <li class="nav-item active"><a class="nav-link" href="book.php">Book Table</a></li>
+          </ul>
+          <a href="#" class="order_online">Order Online</a>
         </div>
-        <div class="col-md-6">
-          <div class="map_container ">
-            <div id="googleMap"></div>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<!-- ================= BOOK SECTION ================= -->
+<section class="book_section layout_padding">
+<div class="container">
+
+  <div class="heading_container">
+    <h2>Mau Mengunjungi?</h2>
+  </div>
+
+  <div class="row">
+
+    <!-- FORM -->
+    <div class="col-md-6">
+      <div class="form_container">
+        <form id="bookForm">
+
+          <input type="text" id="name" class="form-control mb-3" placeholder="Your Name" required>
+          <input type="text" id="phone" class="form-control mb-3" placeholder="Phone Number" required>
+          <input type="email" id="email" class="form-control mb-3" placeholder="Your Email">
+          <input type="date" id="date" class="form-control mb-3" required>
+
+          <div class="btn_box">
+            <button type="submit">Book Now</button>
           </div>
-        </div>
+
+        </form>
       </div>
     </div>
-  </section>
-  <!-- end book section -->
 
-  <!-- footer section -->
-  <footer class="footer_section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-4 footer-col">
-          <div class="footer_contact">
-            <h4>
-              Contact Us
-            </h4>
-            <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>
-                  Location
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>
-                  Call +62123456789
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-                <span>
-                  demo@gmail.com
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 footer-col">
-          <div class="footer_detail">
-            <a href="" class="footer-logo">
-              3MasKentir
-            </a>
-            <p>
-              Udah Jual Bonsai dari sebelum masehi
-            </p>
-            <div class="footer_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4 footer-col">
-          <h4>
-            Opening Hours
-          </h4>
-          <p>
-            Everyday
-          </p>
-          <p>
-            10.00 Am -10.00 Pm
-          </p>
-        </div>
-      </div>
-      <div class="footer-info">
-        <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Kelompok 3NewsKentir</a>
-        </p>
+    <!-- MAP -->
+    <div class="col-md-6">
+      <div class="map_container">
+        <div id="googleMap"></div>
       </div>
     </div>
-  </footer>
-  <!-- footer section -->
 
-  <!-- jQery -->
-  <script src="js/jquery-3.4.1.min.js"></script>
-  <!-- popper js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
-  <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
-  <!-- owl slider -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
-  <!-- isotope js -->
-  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-  <!-- custom js -->
-  <script src="js/custom.js"></script>
-  <!-- Google Map -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-  </script>
-  <!-- End Google Map -->
+  </div>
+
+</div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer_section">
+<div class="container text-center">
+  <p>&copy; <?= date('Y'); ?> 3MasKentir | All Rights Reserved</p>
+</div>
+</footer>
+
+<!-- ================= JS ================= -->
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="js/custom.js"></script>
+
+<!-- GOOGLE MAP -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
+
+<!-- ================= WA REDIRECT SCRIPT ================= -->
+<script>
+document.getElementById("bookForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name  = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const date  = document.getElementById("date").value;
+
+  const message =
+  "Halo Admin %0A%0A" +
+  "Saya ingin mengunjungi 3MasKentir dan melakukan reservasi dengan detail sebagai berikut:%0A%0A" +
+  "Nama: " + name + "%0A" +
+  "No HP: " + phone + "%0A" +
+  "Email: " + email + "%0A" +
+  "Tanggal Kunjungan: " + date;
+
+
+  const waNumber = "6288239468557";
+  const waURL = "https://wa.me/" + waNumber + "?text=" + message;
+
+  window.open(waURL, "_blank");
+});
+</script>
 
 </body>
-
 </html>
