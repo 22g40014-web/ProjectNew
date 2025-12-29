@@ -300,7 +300,6 @@ while($c=$cat5->fetch_assoc()):
 </tr>
 </thead>
 <tbody>
-
 <?php $no=$offset+1; while($p=$products->fetch_assoc()): ?>
 <tr>
 <td><?= $no++; ?></td>
@@ -313,55 +312,123 @@ while($c=$cat5->fetch_assoc()):
 
 <td class="text-center">
 <?php if ($p['image']): ?>
-    <button 
-        class="btn btn-sm btn-primary"
+<button class="btn btn-sm btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#img<?= $p['id']; ?>">
-        Lihat
-    </button>
+  Lihat
+</button>
 
-    <!-- MODAL GAMBAR -->
-    <div class="modal fade" id="img<?= $p['id']; ?>" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><?= htmlspecialchars($p['name']); ?></h5>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <img src="<?= $p['image']; ?>" class="img-fluid rounded">
-                </div>
-            </div>
-        </div>
+<!-- MODAL GAMBAR -->
+<div class="modal fade" id="img<?= $p['id']; ?>" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><?= htmlspecialchars($p['name']); ?></h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="<?= $p['image']; ?>" class="img-fluid rounded">
+      </div>
     </div>
+  </div>
+</div>
 <?php else: ?>
-    <span class="text-muted">Tidak ada</span>
+<span class="text-muted">Tidak ada</span>
 <?php endif; ?>
 </td>
 
-
 <td class="text-center">
-    <!-- EDIT -->
-    <button 
-        class="btn btn-sm btn-warning"
+<!-- EDIT -->
+<button class="btn btn-sm btn-warning"
         data-bs-toggle="modal"
         data-bs-target="#edit<?= $p['id']; ?>">
-        Edit
-    </button>
+  Edit
+</button>
 
-    <!-- HAPUS -->
-    <a 
-        href="?delete=<?= $p['id']; ?>" 
-        class="btn btn-sm btn-danger"
-        onclick="return confirm('Yakin ingin menghapus produk ini?')">
-        Hapus
-    </a>
+<!-- HAPUS -->
+<a href="?delete=<?= $p['id']; ?>"
+   class="btn btn-sm btn-danger"
+   onclick="return confirm('Yakin ingin menghapus produk ini?')">
+  Hapus
+</a>
 </td>
-
-
 </tr>
-<?php endwhile; ?>
 
+<!-- ================= MODAL EDIT ================= -->
+<div class="modal fade" id="edit<?= $p['id']; ?>" tabindex="-1">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+
+<form method="POST" enctype="multipart/form-data">
+
+<div class="modal-header">
+<h5 class="modal-title">Edit Produk</h5>
+<button class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body row g-3">
+
+<input type="hidden" name="id" value="<?= $p['id']; ?>">
+
+<div class="col-md-6">
+<label>Nama Produk</label>
+<input type="text" name="name" class="form-control"
+value="<?= htmlspecialchars($p['name']); ?>" required>
+</div>
+
+<div class="col-md-6">
+<label>Stock</label>
+<input type="number" name="stock" class="form-control"
+value="<?= $p['stock']; ?>" required>
+</div>
+
+<div class="col-md-6">
+<label>Harga Beli</label>
+<input type="number" step="0.01" name="price_buy"
+value="<?= $p['price_buy']; ?>" class="form-control">
+</div>
+
+<div class="col-md-6">
+<label>Harga Jual</label>
+<input type="number" step="0.01" name="price_sell"
+value="<?= $p['price_sell']; ?>" class="form-control">
+</div>
+
+<div class="col-md-12">
+<label>Deskripsi</label>
+<textarea name="description" class="form-control"><?= htmlspecialchars($p['description']); ?></textarea>
+</div>
+
+<div class="col-md-12">
+<label>Gambar Saat Ini</label><br>
+<?php if ($p['image']): ?>
+<img src="<?= $p['image']; ?>" width="120" class="rounded border mb-2">
+<?php else: ?>
+<span class="text-muted">Belum ada gambar</span>
+<?php endif; ?>
+</div>
+
+<div class="col-md-12">
+<label>Ganti Gambar</label>
+<input type="file" name="image" class="form-control">
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="submit" name="update_product" class="btn btn-primary">
+Simpan Perubahan
+</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+<!-- ================= END MODAL EDIT ================= -->
+
+<?php endwhile; ?>
 </tbody>
 </table>
 
