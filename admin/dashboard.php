@@ -4,12 +4,25 @@ require_once 'auth.php';
 require_once 'config/db.php'; 
 
 
-$where = "";
+$where = [];
+$conditions = [];
+
+if (!empty($_GET['search_name'])) {
+    $name = $conn->real_escape_string($_GET['search_name']);
+    $conditions[] = "p.name LIKE '%$name%'";
+}
 
 if (!empty($_GET['search_category'])) {
-    $keyword = $conn->real_escape_string($_GET['search_category']);
-    $where = "WHERE c.name LIKE '%$keyword%'";
+    $cat_id = (int) $_GET['search_category'];
+    $conditions[] = "p.category_id = $cat_id";
 }
+
+if (!empty($conditions)) {
+    $where = "WHERE " . implode(" AND ", $conditions);
+} else {
+    $where = "";
+}
+
 
 $products = $conn->query("
     SELECT 
@@ -59,20 +72,58 @@ $products = $conn->query("
     </div>
 </div>
 
-<!-- SEARCH KATEGORI -->
+<!-- SEARCH PRODUK -->
 <form method="GET" class="mb-3">
-    <div class="input-group" style="max-width: 400px;">
-        <input 
-            type="text" 
-            name="search_category" 
-            class="form-control"
-            placeholder="Cari berdasarkan kategori..."
-            value="<?= isset($_GET['search_category']) ? htmlspecialchars($_GET['search_category']) : ''; ?>">
-        <button class="btn btn-primary" type="submit">
-            Cari
-        </button>
+    <div class="row g-3 align-items-end" style="max-width: 700px;">
+
+        <!-- CARI NAMA PRODUK -->
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Nama Produk</label>
+            <input 
+                type="text" 
+                name="search_name" 
+                class="form-control"
+                placeholder="Ketik sebagian nama produk..."
+                value="<?= isset($_GET['search_name']) ? htmlspecialchars($_GET['search_name']) : ''; ?>">
+        </div>
+
+        <!-- JARAK VISUAL -->
+        <div class="col-md-1"></div>
+
+        <!-- DROPDOWN KATEGORI -->
+        <div class="col-md-4">
+            <label class="form-label fw-semibold">Kategori</label>
+            <select name="search_category" class="form-select">
+                <option value="">-- Semua Kategori --</option>
+
+                <?php
+                // ambil 5 kategori
+                $catSearch = $conn->query("
+                    SELECT id, name 
+                    FROM categories 
+                    ORDER BY name ASC 
+                    LIMIT 5
+                ");
+                while ($c = $catSearch->fetch_assoc()):
+                ?>
+                    <option value="<?= $c['id']; ?>"
+                        <?= (isset($_GET['search_category']) && $_GET['search_category'] == $c['id']) ? 'selected' : ''; ?>>
+                        <?= htmlspecialchars($c['name']); ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+
+        <!-- BUTTON -->
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100">
+                Cari
+            </button>
+        </div>
+
     </div>
 </form>
+
 
 
 
