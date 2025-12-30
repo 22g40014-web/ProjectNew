@@ -105,6 +105,18 @@ if (!$promos) {
 }
 
 .menu-card .img-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;        /* rasio konsisten */
+  overflow: hidden;
+}
+
+.menu-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* isi penuh card */
+  display: block;
+}
+/*.menu-card .img-box {
   height: 220px;
   overflow: hidden;
 }
@@ -113,7 +125,7 @@ if (!$promos) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
+} */
 
 .menu-card {
   cursor: pointer;
@@ -522,7 +534,7 @@ if (!$promos) {
           </div>
           <div class="p-3 text-center">
             <h5><?= htmlspecialchars($p['name']) ?></h5>
-            <p><?= htmlspecialchars($p['description']) ?></p>
+            <!-- <p><?= htmlspecialchars($p['description']) ?></p> -->
             <h6 class="text-warning">
               Rp <?= number_format($p['price_sell'],0,',','.') ?>
             </h6>
