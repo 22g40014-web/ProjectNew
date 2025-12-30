@@ -214,28 +214,20 @@ include 'partials/sidebar.php';
 <div class="col-md-6">
 <label>Kategori</label>
 <select name="category_id" class="form-select" required>
+<option value="">-- Pilih Kategori --</option>
+
 <?php
-$cats = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
-while ($cat = $cats->fetch_assoc()):
+$categoriesAdd = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
+while ($c = $categoriesAdd->fetch_assoc()):
 ?>
-<option value="<?= $cat['id']; ?>"
-<?= ($cat['id'] == $p['category_id']) ? 'selected' : ''; ?>>
-<?= htmlspecialchars($cat['name']); ?>
+<option value="<?= $c['id']; ?>">
+    <?= htmlspecialchars($c['name']); ?>
 </option>
 <?php endwhile; ?>
+
 </select>
 </div>
 
-<!-- ==<div class="col-md-6">
-<label>Kategori</label>
-<select name="category_id" class="form-select" required>
-<option value="">-- Pilih Kategori --</option>
-<?php while($c=$categories->fetch_assoc()): ?>
-<option value="<?= $c['id']; ?>"><?= htmlspecialchars($c['name']); ?>
-</option>
-<?php endwhile; ?>
-</select>
-</div> == -->
 
 <div class="col-md-12">
 <label>Deskripsi</label>
@@ -393,15 +385,17 @@ while($c=$cat5->fetch_assoc()):
 <div class="col-md-6">
 <label>Kategori</label>
 <select name="category_id" class="form-select" required>
+<option value="">-- Pilih Kategori --</option>
+
 <?php
-$catEdit = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
-while ($c = $catEdit->fetch_assoc()):
+$cats = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
+while ($cat = $cats->fetch_assoc()):
 ?>
-<option value="<?= $c['id']; ?>"
-<?= ($c['id'] == $p['category_id']) ? 'selected' : ''; ?>>
-<?= htmlspecialchars($c['name']); ?>
+<option value="<?= $cat['id']; ?>">
+    <?= htmlspecialchars($cat['name']); ?>
 </option>
 <?php endwhile; ?>
+
 </select>
 </div>
 
