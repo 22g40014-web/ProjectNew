@@ -84,6 +84,20 @@ while ($p = $qProd->fetch_assoc()) {
 }
 
 .menu-card .img-box {
+  width: 100%;
+  aspect-ratio: 4 / 3;        /* rasio konsisten */
+  overflow: hidden;
+}
+
+.menu-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* isi penuh card */
+  display: block;
+}
+
+/*
+.menu-card .img-box {
   height: 220px;
   overflow: hidden;
 }
@@ -93,6 +107,7 @@ while ($p = $qProd->fetch_assoc()) {
   height: 100%;
   object-fit: cover;
 }
+  */
 
 .empty-category {
   min-height: 300px;
@@ -386,7 +401,7 @@ while ($p = $qProd->fetch_assoc()) {
           </div>
           <div class="p-3 text-center">
             <h5><?= htmlspecialchars($p['name']) ?></h5>
-            <p><?= htmlspecialchars($p['description']) ?></p>
+            <!-- <p><?= htmlspecialchars($p['description']) ?></p> -->
             <h6 class="text-warning">
               Rp <?= number_format($p['price_sell'],0,',','.') ?>
             </h6>
