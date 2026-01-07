@@ -2,6 +2,7 @@
 require_once 'config/db.php';
 require_once 'partials/header.php';
 
+
 // =======================
 // TAMBAH PENJUALAN
 // =======================
@@ -202,16 +203,46 @@ $products = $conn->query("
     ORDER BY p.name ASC
 ");
 
+// =======================
+// DATA PENJUALAN
+// =======================
 $sales = $conn->query("
-    SELECT s.*, p.name 
+    SELECT 
+        s.id,
+        s.qty,
+        s.price_buy,
+        s.price_sell,
+        s.final_cost,
+        s.total,
+        s.profit,
+        p.name
     FROM sales s
     JOIN products p ON p.id = s.product_id
     ORDER BY s.created_at DESC
 ");
 
 
+
 include 'partials/sidebar.php';
 ?>
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<style>
+.modal input.form-control {
+    background-color: #fff !important;
+    color: #000 !important;
+    width: 100% !important;
+}
+</style>
+</head>
+
+
 
 <div class="col-md-10 p-4">
 
@@ -226,46 +257,46 @@ include 'partials/sidebar.php';
 <?php endif; ?>
 
 <!-- FORM TAMBAH -->
+<!-- FORM TAMBAH -->
 <form method="post" class="card mb-4 p-3">
 <div class="row g-2">
+
     <div class="col-md-4">
-    <label class="form-label">Produk</label>
-<select name="product_id" class="form-select" required>
-    <option value="">-- Pilih Produk --</option>
+        <label class="form-label">Produk</label>
 
-    <?php while ($p = $products->fetch_assoc()): ?>
-        <?php
-            $stock = (int)($p['stock'] ?? 0);
+        <select name="product_id"
+                id="productSearch"
+                class="form-select"
+                required>
+            <option value="">Pilih Produk</option>
 
-            if ($stock <= 0) {
-                $label = "HABIS";
-            } elseif ($stock <= 3) {
-                $label = "Stok: $stock (Hampir Habis)";
-            } else {
-                $label = "Stok: $stock";
-            }
-        ?>
-        <option 
-            value="<?= $p['id'] ?>"
-            data-price="<?= $p['price_sell'] ?>"
-            <?= $stock <= 0 ? 'disabled' : '' ?>
-        >
-            <?= htmlspecialchars($p['name']) ?> — <?= $label ?>
-        </option>
-    <?php endwhile; ?>
-</select>
+            <?php while ($p = $products->fetch_assoc()): ?>
+                <?php
+                    $stock = (int)($p['stock'] ?? 0);
+                    if ($stock <= 0) continue;
 
-
-</div>
+                    $label = $stock <= 3
+                        ? "Stok: $stock (Hampir Habis)"
+                        : "Stok: $stock";
+                ?>
+                <option value="<?= $p['id'] ?>"
+                        data-price="<?= $p['price_sell'] ?>">
+                    <?= htmlspecialchars($p['name']) ?> — <?= $label ?>
+                </option>
+            <?php endwhile; ?>
+        </select>
+    </div>
 
     <div class="col-md-2">
         <label>Qty</label>
         <input type="number" name="qty" class="form-control" required>
     </div>
+
     <div class="col-md-3">
         <label>Harga Jual</label>
         <input type="number" name="price_sell" class="form-control" required>
     </div>
+
     <div class="col-md-3">
         <label>Beban Penjualan (Final)</label>
         <input type="number" name="final_cost" class="form-control" value="0">
@@ -274,79 +305,157 @@ include 'partials/sidebar.php';
     <div class="col-md-3 d-flex align-items-end">
         <button name="add_sale" class="btn btn-success w-100">Simpan</button>
     </div>
+
 </div>
 </form>
+
+
+
 
 <!-- TABLE -->
 <table class="table table-bordered">
-<thead>
-<tr>
-    <th>#</th>
+<thead class="table-dark">
+<tr class="text-center">
+    <th>No</th>
     <th>Produk</th>
     <th>Qty</th>
     <th>Harga Jual</th>
-    <th>Total</th>
-    <th>Profit</th>
+    <th>Harga Beli</th>
     <th>Beban</th>
-    <th>Aksi</th>
+    <th>Profit</th>
+    <th width="120">Aksi</th>
 </tr>
 </thead>
+<!-- TABLE -->
+
+
 <tbody>
-<?php $no=1; while ($s = $sales->fetch_assoc()): ?>
-<tr>
-<td><?= $no++ ?></td>
-<td><?= $s['name'] ?></td>
-<td><?= $s['qty'] ?></td>
-<td>Rp <?= number_format($s['price_sell']) ?></td>
-<td>Rp <?= number_format($s['total']) ?></td>
-<td>Rp <?= number_format($s['profit']) ?></td>
-<td>Rp <?= number_format($s['final_cost']) ?></td>
-<td>
-<button 
-    class="btn btn-sm btn-warning"
-    data-bs-toggle="modal"
-    data-bs-target="#edit<?= $s['id'] ?>">Edit</button>
-<a 
-    href="?delete=<?= $s['id'] ?>" 
-    onclick="return confirm('Hapus penjualan?')"
-    class="btn btn-sm btn-danger">Delete</a>
-</td>
+<?php $no = 1; while ($s = $sales->fetch_assoc()): ?>
+<tr class="text-center align-middle">
+    <td><?= $no++ ?></td>
+    <td class="text-start"><?= htmlspecialchars($s['name']) ?></td>
+    <td><?= $s['qty'] ?></td>
+    <td>Rp <?= number_format($s['price_sell'],0,',','.') ?></td>
+    <td>Rp <?= number_format($s['price_buy'],0,',','.') ?></td>
+    <td>Rp <?= number_format($s['final_cost'],0,',','.') ?></td>
+
+    <td class="<?= $s['profit'] < 0 ? 'text-danger fw-bold' : 'text-success fw-bold' ?>">
+        Rp <?= number_format($s['profit'],0,',','.') ?>
+    </td>
+
+    <td>
+        <div class="d-flex gap-1 justify-content-center">
+            <button 
+                class="btn btn-sm btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#edit<?= $s['id'] ?>">
+                ✏️
+            </button>
+
+            <a 
+                href="?delete=<?= $s['id'] ?>"
+                onclick="return confirm('Hapus penjualan ini?')"
+                class="btn btn-sm btn-danger">
+                🗑
+            </a>
+        </div>
+    </td>
 </tr>
 
+
 <!-- MODAL EDIT -->
-<div class="modal fade" id="edit<?= $s['id'] ?>">
-<div class="modal-dialog">
-<form method="post" class="modal-content">
-<div class="modal-header">
-<h5>Edit Penjualan</h5>
+<!-- MODAL EDIT -->
+<div class="modal fade" id="edit<?= $s['id'] ?>" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <form method="post" class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Penjualan</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" name="sale_id" value="<?= $s['id'] ?>">
+
+        <div class="mb-3">
+          <label class="form-label">Qty</label>
+          <input type="number"
+                 name="qty"
+                 value="<?= $s['qty'] ?>"
+                 class="form-control"
+                 min="1"
+                 required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Harga Jual</label>
+          <input type="number"
+                 name="price_sell"
+                 value="<?= $s['price_sell'] ?>"
+                 class="form-control"
+                 required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Beban Penjualan</label>
+          <input type="number"
+                 name="final_cost"
+                 value="<?= $s['final_cost'] ?>"
+                 class="form-control">
+        </div>
+      </div>
+
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+          Batal
+        </button>
+        <button name="update_sale"
+                class="btn btn-primary">
+          Simpan
+        </button>
+      </div>
+
+    </form>
+  </div>
 </div>
-<div class="modal-body">
-<input type="hidden" name="sale_id" value="<?= $s['id'] ?>">
-<div class="mb-2">
-<label>Qty</label>
-<input type="number" name="qty" value="<?= $s['qty'] ?>" class="form-control">
-</div>
-<div class="mb-2">
-<label>Harga Jual</label>
-<input type="number" name="price_sell" value="<?= $s['price_sell'] ?>" class="form-control">
-</div>
-<div class="mb-2">
-    <label>Beban Penjualan</label>
-    <input type="number" name="final_cost" 
-           value="<?= $s['final_cost'] ?>" 
-           class="form-control">
-</div>
-</div>
-<div class="modal-footer">
-<button name="update_sale" class="btn btn-primary">Update</button>
-</div>
-</form>
-</div>
-</div>
+
+
 
 <?php endwhile; ?>
 </tbody>
+
+
+<!-- JQUERY (WAJIB) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- SELECT2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+    $('#productSearch').select2({
+        placeholder: 'Cari & Pilih Produk',
+        width: '100%',
+        minimumResultsForSearch: 0   // PAKSA SEARCH MUNCUL
+    });
+
+    // Auto isi harga
+    $('#productSearch').on('change', function () {
+        const price = $(this).find(':selected').data('price') || 0;
+        $('input[name="price_sell"]').val(price);
+    });
+
+});
+</script>
+
+</tbody>
 </table>
 </div>
-
+</html>
 <?php require_once 'partials/footer.php'; ?>
+
+
