@@ -364,105 +364,142 @@ while($c=$cat5->fetch_assoc()):
 </td>
 </tr>
 
-<!-- ================= MODAL EDIT ================= -->
-<!-- ================= MODAL EDIT ================= -->
-<div class="modal fade" id="edit<?= $p['id']; ?>" tabindex="-1">
-<div class="modal-dialog modal-lg modal-dialog-centered">
-<div class="modal-content">
+<!-- ================= MODAL EDIT PRODUK ================= -->
+<div class="modal fade" id="edit<?= $p['id']; ?>" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
 
-<form method="POST" enctype="multipart/form-data">
+      <form method="POST" enctype="multipart/form-data">
 
-<div class="modal-header">
-<h5 class="modal-title">Edit Produk</h5>
-<button class="btn-close" data-bs-dismiss="modal"></button>
-</div>
+        <!-- HEADER -->
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Produk</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
 
-<div class="modal-body row g-3">
+        <!-- BODY -->
+        <div class="modal-body">
 
-<input type="hidden" name="id" value="<?= $p['id']; ?>">
+          <input type="hidden" name="id" value="<?= $p['id']; ?>">
 
-<!-- KATEGORI -->
-<div class="col-md-6">
-<label>Kategori</label>
-<select name="category_id" class="form-select" required>
-<option value="">-- Pilih Kategori --</option>
+          <!-- ROW 1 : KATEGORI & NAMA -->
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Kategori</label>
+              <select name="category_id" class="form-select" required>
+                <option value="">-- Pilih Kategori --</option>
+                <?php
+                $cats = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
+                while ($cat = $cats->fetch_assoc()):
+                ?>
+                <option value="<?= $cat['id']; ?>"
+                  <?= ($cat['id'] == $p['category_id']) ? 'selected' : '' ?>>
+                  <?= htmlspecialchars($cat['name']); ?>
+                </option>
+                <?php endwhile; ?>
+              </select>
+            </div>
 
-<?php
-$cats = $conn->query("SELECT id, name FROM categories ORDER BY name ASC");
-while ($cat = $cats->fetch_assoc()):
-?>
-<option value="<?= $cat['id']; ?>">
-    <?= htmlspecialchars($cat['name']); ?>
-</option>
-<?php endwhile; ?>
+            <div class="col-md-6">
+              <label class="form-label">Nama Produk</label>
+              <input type="text"
+                     name="name"
+                     class="form-control"
+                     value="<?= htmlspecialchars($p['name']); ?>"
+                     required>
+            </div>
+          </div>
 
-</select>
-</div>
+          <!-- ROW 2 : STOCK & HARGA BELI -->
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label">Stock</label>
+              <input type="number"
+                     name="stock"
+                     class="form-control"
+                     value="<?= $p['stock']; ?>"
+                     required>
+            </div>
 
-<!-- NAMA PRODUK -->
-<div class="col-md-6">
-<label>Nama Produk</label>
-<input type="text" name="name" class="form-control"
-value="<?= htmlspecialchars($p['name']); ?>" required>
-</div>
+            <div class="col-md-6">
+              <label class="form-label">Harga Beli</label>
+              <input type="number"
+                     step="0.01"
+                     name="price_buy"
+                     class="form-control"
+                     value="<?= $p['price_buy']; ?>"
+                     required>
+            </div>
+          </div>
 
-<!-- STOCK -->
-<div class="col-md-6">
-<label>Stock</label>
-<input type="number" name="stock" class="form-control"
-value="<?= $p['stock']; ?>" required>
-</div>
+          <!-- ROW 3 : HARGA JUAL -->
+          <div class="row g-3 mt-1">
+            <div class="col-md-6">
+              <label class="form-label">Harga Jual</label>
+              <input type="number"
+                     step="0.01"
+                     name="price_sell"
+                     class="form-control"
+                     value="<?= $p['price_sell']; ?>"
+                     required>
+            </div>
+          </div>
 
-<!-- HARGA BELI -->
-<div class="col-md-6">
-<label>Harga Beli</label>
-<input type="number" step="0.01" name="price_buy"
-value="<?= $p['price_buy']; ?>" class="form-control" required>
-</div>
+          <!-- DESKRIPSI -->
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label">Deskripsi</label>
+              <textarea name="description"
+                        class="form-control"
+                        rows="3"
+                        required><?= htmlspecialchars($p['description']); ?></textarea>
+            </div>
+          </div>
 
-<!-- HARGA JUAL -->
-<div class="col-md-6">
-<label>Harga Jual</label>
-<input type="number" step="0.01" name="price_sell"
-value="<?= $p['price_sell']; ?>" class="form-control" required>
-</div>
+          <!-- GAMBAR SAAT INI -->
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label">Gambar Saat Ini</label><br>
+              <?php if ($p['image']): ?>
+                <img src="<?= $p['image']; ?>" width="120" class="rounded border mb-2">
+              <?php else: ?>
+                <span class="text-muted">Belum ada gambar</span>
+              <?php endif; ?>
+            </div>
+          </div>
 
-<!-- DESKRIPSI -->
-<div class="col-md-12">
-<label>Deskripsi</label>
-<textarea name="description" class="form-control" required><?= htmlspecialchars($p['description']); ?></textarea>
-</div>
+          <!-- GANTI GAMBAR -->
+          <div class="row g-3 mt-1">
+            <div class="col-md-12">
+              <label class="form-label">Ganti Gambar</label>
+              <input type="file" name="image" class="form-control">
+            </div>
+          </div>
 
-<!-- GAMBAR SAAT INI -->
-<div class="col-md-12">
-<label>Gambar Saat Ini</label><br>
-<?php if ($p['image']): ?>
-<img src="<?= $p['image']; ?>" width="120" class="rounded border mb-2">
-<?php else: ?>
-<span class="text-muted">Belum ada gambar</span>
-<?php endif; ?>
-</div>
+        </div>
 
-<!-- GANTI GAMBAR -->
-<div class="col-md-12">
-<label>Ganti Gambar</label>
-<input type="file" name="image" class="form-control">
-</div>
+        <!-- FOOTER -->
+        <div class="modal-footer">
+          <button type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal">
+            Batal
+          </button>
 
-</div>
+          <button type="submit"
+                  name="update_product"
+                  class="btn btn-primary">
+            Simpan Perubahan
+          </button>
+        </div>
 
-<div class="modal-footer">
-<button type="submit" name="update_product" class="btn btn-primary">
-Simpan Perubahan
-</button>
-</div>
+      </form>
 
-</form>
-
-</div>
-</div>
+    </div>
+  </div>
 </div>
 <!-- ================= END MODAL EDIT ================= -->
+
 
 
 <?php endwhile; ?>

@@ -13,7 +13,7 @@
   <meta name="author" content="" />
   <link rel="shortcut icon" href="images/favicon.png" type="">
 
-  <title> 3MasKentir </title>
+  <title> CHABA BONSAI</title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -44,7 +44,7 @@
         <nav class="navbar navbar-expand-lg custom_nav-container ">
           <a class="navbar-brand" href="index.php">
             <span>
-              3MasKentir
+              CHABA BONSAI
             </span>
           </a>
 
@@ -106,7 +106,7 @@
           <div class="detail-box">
             <div class="heading_container">
               <h2>
-                We Are 3MasKentir
+                We Are CHABA BONSAI
               </h2>
             </div>
             <p>
