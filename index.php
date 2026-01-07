@@ -414,17 +414,23 @@ if (!$promos) {
   $priceAfter = $priceNormal - $discountAmount;
 
   // WA
-  $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
+  
+  // WA PROMO (JANGAN UBAH LOGIC)
+    $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
 
-  $waText = urlencode(
-    "Halo Admin,\n" .
-    "Saya tertarik dengan tanaman ini:\n" .
-    $p['product_name'] . "\n" .
-    "Harga Normal: Rp" . number_format($priceNormal,0,',','.') . "\n" .
-    "Harga Promo: Rp" . number_format($priceAfter,0,',','.') . "\n" .
-    "Saya ingin bernego dengan anda.\n\n" .
-    "Gambar:\n" . $imageUrl
-  );
+    $waText = urlencode(
+      "Halo Admin 👋\n\n" .
+      "Saya tertarik dengan tanaman berikut:\n\n" .
+      "*Nama Produk:*\n" .
+      $p['product_name'] . "\n\n" .
+      "*Harga Normal:*\n" .
+      "Rp" . number_format($priceNormal,0,',','.') . "\n\n" .
+      "*Harga Promo:*\n" .
+      "Rp" . number_format($priceAfter,0,',','.') . "\n\n" .
+      "Mohon informasi selanjutnya 🙏"
+      //"Gambar:\n" . $imageUrl
+    );
+
 
   $waLink = "https://wa.me/6288239468557?text=" . $waText;
 ?>
@@ -790,16 +796,26 @@ if (!$promos) {
         <div class="row">
           <div class="col-md-6 text-center">
             <img id="modalProductImage"
-                 src=""
-                 class="img-fluid rounded"
-                 alt="">
+                src=""
+                class="img-fluid rounded"
+                alt="">
           </div>
+
           <div class="col-md-6">
             <h6 class="text-warning" id="modalProductPrice"></h6>
             <p id="modalProductDescription"></p>
+
+            <!-- TOMBOL ORDER WA (TAMBAHKAN) -->
+            <a href="#"
+              id="waOrderBtn"
+              target="_blank"
+              class="btn btn-success w-100 mt-3">
+              Order via WhatsApp
+            </a>
           </div>
         </div>
       </div>
+
 
     </div>
   </div>
@@ -874,6 +890,42 @@ $(document).on('click', '.product-modal-trigger', function(){
   $('#modalProductImage').attr('src', $(this).data('image'));
   $('#modalProductPrice').text($(this).data('price'));
 
+  $('#productModal').modal('show');
+});
+</script>
+
+<!-- ================= MODAL + WA ORDER SCRIPT ================= -->
+<script>
+$(document).on('click', '.product-modal-trigger', function(){
+
+  let name        = $(this).data('name');
+  let description = $(this).data('description');
+  let image       = $(this).data('image');
+  let price       = $(this).data('price');
+
+  /* ===== ISI DATA KE MODAL ===== */
+  $('#modalProductName').text(name);
+  $('#modalProductDescription').text(description);
+  $('#modalProductImage').attr('src', image);
+  $('#modalProductPrice').text(price);
+
+  /* ===== FORMAT PESAN WHATSAPP ===== */
+  let waText =
+    "Halo Admin,%0A" +
+    "Saya tertarik dengan produk berikut:%0A%0A" +
+    "Nama: " + name + "%0A" +
+    "Harga: " + price + "%0A%0A" +
+    "Mohon informasi selanjutnya.";
+
+  let waNumber = "6288239468557"; // GANTI NOMOR ADMIN
+
+  /* ===== SET LINK KE TOMBOL WA ===== */
+  $('#waOrderBtn').attr(
+    'href',
+    'https://wa.me/' + waNumber + '?text=' + waText
+  );
+
+  /* ===== TAMPILKAN MODAL ===== */
   $('#productModal').modal('show');
 });
 </script>

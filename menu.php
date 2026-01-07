@@ -594,11 +594,15 @@ $(document).on('click', '.product-modal-trigger', function(){
 
         <ol>
           <li>Pilih bonsai yang kamu inginkan di halaman menu terlebih dahulu.</li>
-          <li>Klik bonsai yang ingin kamu beli.</strong>.</li>
+          <li>Klik bonsai yang ingin kamu beli.</li>
           <li>Pastikan bonsai yang ingin kamu beli sudah sesuai.</li>
-          <li>Klik </li>
+          <li>Klik <strong>Order via Whatsapp</strong> untuk melakukan pesanan ke penjual.</li>
           <li>Lakukan pembayaran sesuai instruksi dari penjual.</li>
         </ol>
+        <br>
+        <ul>
+          <p>*Order hanya bisa melalui Whatsapp untuk sementara, kami mohon maaf atas ketidaknyamanannya terimakasih</p>
+        </ul>
 
         <!-- ======================
              AKHIR CUSTOM
