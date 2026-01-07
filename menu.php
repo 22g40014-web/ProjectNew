@@ -260,8 +260,9 @@ while ($p = $qProd->fetch_assoc()) {
             <li class="nav-item"><a class="nav-link" href="book.php">Book Table</a></li>
           </ul>
           <div class="user_option">
-            <a href="#" class="user_link"><i class="fa fa-user"></i></a>
-            <a class="order_online" href="#">Order Online</a>
+            <a href="menu.php?order=1" class="order_online">
+              Order Online
+            </a>
           </div>
         </div>
       </nav>
@@ -531,6 +532,61 @@ $(document).on('click', '.product-modal-trigger', function(){
 
 <!-- custom js -->
 <script src="js/custom.js"></script>
+
+<!-- Order Guide Modal -->
+<div class="modal fade" id="orderGuideModal" tabindex="-1" role="dialog" aria-labelledby="orderGuideModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderGuideModalLabel">
+          🛒 Cara Order di CHABA BONSAI
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- ======================
+             SILAHKAN CUSTOM ISI DI SINI
+        ======================= -->
+
+        <ol>
+          <li>Pilih bonsai yang kamu inginkan di halaman menu terlebih dahulu.</li>
+          <li>Klik bonsai yang ingin kamu beli.</strong>.</li>
+          <li>Pastikan bonsai yang ingin kamu beli sudah sesuai.</li>
+          <li>Klik </li>
+          <li>Lakukan pembayaran sesuai instruksi dari penjual.</li>
+        </ol>
+
+        <!-- ======================
+             AKHIR CUSTOM
+        ======================= -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Tutup
+        </button>
+        <a href="menu.php" class="btn btn-success">
+          Mulai Order
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Script modal cara order-->
+<script>
+  $(document).ready(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('order') === '1') {
+      $('#orderGuideModal').modal('show');
+    }
+  });
+</script>
 
 </body>
 </html>

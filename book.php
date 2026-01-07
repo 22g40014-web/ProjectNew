@@ -33,19 +33,40 @@
 
   <header class="header_section">
     <div class="container">
-      <nav class="navbar navbar-expand-lg custom_nav-container">
-        <a class="navbar-brand" href="index.php">3MasKentir</a>
+      <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="index.php">
+            <span>
+              CHABA BONSAI
+            </span>
+          </a>
 
-        <div class="collapse navbar-collapse">
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item active"><a class="nav-link" href="book.php">Book Table</a></li>
-          </ul>
-          <a href="#" class="order_online">Order Online</a>
-        </div>
-      </nav>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  mx-auto ">
+              <li class="nav-item active">
+                <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="menu.php">Menu</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="about.php">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="book.php">Book Table</a>
+              </li>
+            </ul>
+            <div class="user_option">
+              </a>
+              <a href="menu.php?order=1" class="order_online">
+                Order Online
+              </a>
+            </div>
+          </div>
+        </nav>
     </div>
   </header>
 </div>
