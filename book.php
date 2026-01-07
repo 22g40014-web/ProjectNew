@@ -102,7 +102,21 @@
     <!-- MAP -->
     <div class="col-md-6">
       <div class="map_container">
-        <div id="googleMap"></div>
+              <div class="map_container">
+        <a href="https://www.google.com/maps?q=-7.005145,110.438125" 
+          target="_blank"
+          style="display:block; border-radius:10px; overflow:hidden;">
+          
+          <iframe
+            src="https://www.google.com/maps?q=-7.005145,110.438125&z=15&output=embed"
+            width="100%"
+            height="350"
+            style="border:0;"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </a>
+      </div>
       </div>
     </div>
 
