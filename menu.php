@@ -294,19 +294,24 @@ while ($p = $qProd->fetch_assoc()) {
   $priceAfter = $priceNormal - $discountAmount;
 
   // WA
-  $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
+  // WA PROMO (JANGAN UBAH LOGIC)
+    $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
 
-  $waText = urlencode(
-    "Halo Admin,\n" .
-    "Saya tertarik dengan tanaman ini:\n" .
-    $p['product_name'] . "\n" .
-    "Harga Normal: Rp" . number_format($priceNormal,0,',','.') . "\n" .
-    "Harga Promo: Rp" . number_format($priceAfter,0,',','.') . "\n" .
-    "Saya ingin bernego dengan anda.\n\n" .
-    "Gambar:\n" . $imageUrl
-  );
+    $waText = urlencode(
+      "Halo Admin 👋\n\n" .
+      "Saya tertarik dengan tanaman berikut:\n\n" .
+      "*Nama Produk:*\n" .
+      $p['product_name'] . "\n\n" .
+      "*Harga Normal:*\n" .
+      "Rp" . number_format($priceNormal,0,',','.') . "\n\n" .
+      "*Harga Promo:*\n" .
+      "Rp" . number_format($priceAfter,0,',','.') . "\n\n" .
+      "Mohon informasi selanjutnya 🙏"
+      //"Gambar:\n" . $imageUrl
+    );
 
-  $waLink = "https://wa.me/628XXXXXXXXX?text=" . $waText;
+
+  $waLink = "https://wa.me/6288239468557?text=" . $waText;
 ?>
 
 <div class="col-md-6 mb-4">
@@ -390,13 +395,15 @@ while ($p = $qProd->fetch_assoc()) {
         if (file_exists($path)) $image = $path;
       }
     ?>
+
       <div class="col-sm-6 col-lg-4 mb-4 product-item"
            data-name="<?= strtolower($p['name']) ?>">
         <div class="menu-card product-modal-trigger"
-     data-name="<?= htmlspecialchars($p['name']) ?>"
-     data-description="<?= htmlspecialchars($p['description']) ?>"
-     data-image="<?= $image ?>"
-     data-price="Rp <?= number_format($p['price_sell'],0,',','.') ?>">
+            data-name="<?= htmlspecialchars($p['name']) ?>"
+            data-description="<?= htmlspecialchars($p['description']) ?>"
+            data-image="<?= $image ?>"
+            data-price="Rp <?= number_format($p['price_sell'],0,',','.') ?>"
+            data-price-raw="<?= $p['price_sell'] ?>">
           <div class="img-box">
             <img src="<?= $image ?>">
           </div>
@@ -440,16 +447,26 @@ while ($p = $qProd->fetch_assoc()) {
         <div class="row">
           <div class="col-md-6 text-center">
             <img id="modalProductImage"
-                 src=""
-                 class="img-fluid rounded"
-                 alt="">
+                src=""
+                class="img-fluid rounded"
+                alt="">
           </div>
+
           <div class="col-md-6">
             <h6 class="text-warning" id="modalProductPrice"></h6>
             <p id="modalProductDescription"></p>
+
+            <!-- TOMBOL ORDER WA (TAMBAHKAN) -->
+            <a href="#"
+              id="waOrderBtn"
+              target="_blank"
+              class="btn btn-success w-100 mt-3">
+              Order via WhatsApp
+            </a>
           </div>
         </div>
       </div>
+
 
     </div>
   </div>
@@ -467,7 +484,7 @@ while ($p = $qProd->fetch_assoc()) {
 <script>
 $(document).ready(function(){
 
-  /* INIT OWL */
+  /* ================= INIT OWL ================= */
   const owl = $('#menuCarousel').owlCarousel({
     items: 1,
     dots: false,
@@ -476,7 +493,7 @@ $(document).ready(function(){
     autoHeight: false
   });
 
-  /* NAV KATEGORI */
+  /* ================= NAV KATEGORI ================= */
   $('.menu-nav .btn').on('click', function(){
     const index = $(this).data('index');
 
@@ -486,7 +503,7 @@ $(document).ready(function(){
     $(this).addClass('active');
   });
 
-  /* SEARCH PRODUK */
+  /* ================= SEARCH PRODUK ================= */
   $('#searchProduct').on('keyup', function(){
     let key = $(this).val().toLowerCase();
 
@@ -494,7 +511,7 @@ $(document).ready(function(){
       let found = false;
 
       $(this).find('.product-item').each(function(){
-        if($(this).data('name').includes(key)){
+        if($(this).data('name').toLowerCase().includes(key)){
           $(this).show();
           found = true;
         } else {
@@ -506,7 +523,7 @@ $(document).ready(function(){
     });
   });
 
-  /* STICKY HEADER */
+  /* ================= STICKY HEADER ================= */
   $(window).on('scroll', function(){
     $('.header_section').toggleClass(
       'sticky-active',
@@ -517,18 +534,41 @@ $(document).ready(function(){
 });
 </script>
 
+<!-- ================= MODAL + WA ORDER SCRIPT ================= -->
 <script>
 $(document).on('click', '.product-modal-trigger', function(){
 
-  $('#modalProductName').text($(this).data('name'));
-  $('#modalProductDescription').text($(this).data('description'));
-  $('#modalProductImage').attr('src', $(this).data('image'));
-  $('#modalProductPrice').text($(this).data('price'));
+  let name        = $(this).data('name');
+  let description = $(this).data('description');
+  let image       = $(this).data('image');
+  let price       = $(this).data('price');
 
+  /* ===== ISI DATA KE MODAL ===== */
+  $('#modalProductName').text(name);
+  $('#modalProductDescription').text(description);
+  $('#modalProductImage').attr('src', image);
+  $('#modalProductPrice').text(price);
+
+  /* ===== FORMAT PESAN WHATSAPP ===== */
+  let waText =
+    "Halo Admin,%0A" +
+    "Saya tertarik dengan produk berikut:%0A%0A" +
+    "Nama: " + name + "%0A" +
+    "Harga: " + price + "%0A%0A" +
+    "Mohon informasi selanjutnya.";
+
+  let waNumber = "6288239468557"; // GANTI NOMOR ADMIN
+
+  /* ===== SET LINK KE TOMBOL WA ===== */
+  $('#waOrderBtn').attr(
+    'href',
+    'https://wa.me/' + waNumber + '?text=' + waText
+  );
+
+  /* ===== TAMPILKAN MODAL ===== */
   $('#productModal').modal('show');
 });
 </script>
-
 
 <!-- custom js -->
 <script src="js/custom.js"></script>
