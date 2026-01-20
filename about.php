@@ -15,8 +15,7 @@
 
   <title> CHABA BONSAI</title>
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -29,6 +28,85 @@
   <link href="css/style.css" rel="stylesheet" />
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
+
+  <style>
+    .card-click {
+    cursor: pointer;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.card-click:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+/* SECTION CARD */
+.card_container {
+    background-color: #1f2933; /* senada hero & footer */
+    padding: 80px 0;
+}
+
+/* center card besar */
+.card_container .card.mb-3 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* warna card */
+.card_container .card {
+    background-color: #ffffff;
+    border-radius: 12px;
+}
+
+/* jarak antar blok */
+.card-group-wrapper {
+    margin-bottom: 50px;
+}
+
+/* CARD UMUM */
+.card {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* CARD KECIL */
+.card img {
+  height: 160px;     /* DARI 220 → 160 */
+  object-fit: cover;
+}
+
+/* CARD BESAR (horizontal) */
+.card-horizontal img {
+  height: 140px;
+  object-fit: cover;
+}
+
+/* GRID CARD KECIL */
+.row-cols-md-2 > .col {
+  max-width: 360px;   /* bikin card lebih kecil */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* SPACING SECTION */
+.card_container {
+    padding: 70px 0;
+    background-color: #1f2933;
+}
+
+/* hover tetap elegan */
+.card-click {
+    cursor: pointer;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.card-click:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,.25);
+}
+
+  </style>
 
 </head>
 
@@ -112,6 +190,117 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
 
   <!-- end about section -->
 
+<!-- SECTION CARD CONTAINER -->
+<section class="card_container py-5" style="background:#1f2933;">
+  <div class="container">
+
+    <!-- CARD BESAR -->
+    <div class="card card-horizontal card-click mx-auto mb-5"
+         style="max-width: 640px;"
+         data-bs-toggle="modal"
+         data-bs-target="#sharedModal"
+         data-title="Custom Bonsai"
+         data-img="images/about-img.jpg"
+         data-desc="Layanan pembuatan bonsai eksklusif sesuai karakter dan filosofi pelanggan.">
+
+      <div class="row g-0 align-items-center">
+        <div class="col-md-4">
+          <img src="images/about-img.jpg"
+               class="img-fluid"
+               style="height:140px; object-fit:cover;"
+               alt="">
+        </div>
+
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">Custom Bonsai</h5>
+            <p class="card-text">
+              Bonsai eksklusif sesuai karakter pelanggan.
+            </p>
+            <small class="text-muted">Klik untuk detail</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD KECIL -->
+    <div class="row justify-content-center g-4">
+
+      <div class="col-md-4">
+        <div class="card card-click h-100"
+             data-bs-toggle="modal"
+             data-bs-target="#sharedModal"
+             data-title="Workshop Bonsai"
+             data-img="images/about-img.jpg"
+             data-desc="Pelatihan bonsai dari dasar hingga mahir.">
+
+          <img src="images/about-img.jpg"
+               class="card-img-top"
+               style="height:160px; object-fit:cover;"
+               alt="">
+
+          <div class="card-body">
+            <h5 class="card-title">Workshop Bonsai</h5>
+            <p class="card-text">
+              Belajar bonsai langsung dari praktisi.
+            </p>
+            <small class="text-muted">Klik untuk detail</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-click h-100"
+             data-bs-toggle="modal"
+             data-bs-target="#sharedModal"
+             data-title="Perawatan Bonsai"
+             data-img="images/about-img.jpg"
+             data-desc="Perawatan berkala agar bonsai tetap sehat dan indah.">
+
+          <img src="images/about-img.jpg"
+               class="card-img-top"
+               style="height:160px; object-fit:cover;"
+               alt="">
+
+          <div class="card-body">
+            <h5 class="card-title">Perawatan Bonsai</h5>
+            <p class="card-text">
+              Perawatan rutin dan profesional.
+            </p>
+            <small class="text-muted">Klik untuk detail</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-click h-100"
+             data-bs-toggle="modal"
+             data-bs-target="#sharedModal"
+             data-title="Perawatan Bonsai"
+             data-img="images/about-img.jpg"
+             data-desc="Perawatan berkala agar bonsai tetap sehat dan indah.">
+
+          <img src="images/about-img.jpg"
+               class="card-img-top"
+               style="height:160px; object-fit:cover;"
+               alt="">
+
+          <div class="card-body">
+            <h5 class="card-title">Perawatan Bonsai</h5>
+            <p class="card-text">
+              Perawatan rutin dan profesional.
+            </p>
+            <small class="text-muted">Klik untuk detail</small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
   <!-- footer section -->
   <footer class="footer_section">
     <div class="container">
@@ -146,7 +335,7 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
             <a href="" class="footer-logo">
-              3MasKentir
+              CHABABONSAI
             </a>
             <p>
               Udah Jual Bonsai dari sebelum masehi
@@ -185,20 +374,36 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
       <div class="footer-info">
         <p>
           &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Kelompok 3NewsKentir</a>
+          <a href="https://html.design/">CHABABONSAI</a>
         </p>
       </div>
     </div>
   </footer>
   <!-- footer section -->
 
-  <!-- jQery -->
-  <script src="js/jquery-3.4.1.min.js"></script>
+  <!--MODAL CARD -->
+<div class="modal fade" id="sharedModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <img id="modalImg" class="img-fluid rounded mb-3" alt="">
+        <p id="modalDesc"></p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- popper js -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
   </script>
-  <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
   <!-- owl slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
@@ -212,6 +417,27 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
   </script>
   <!-- End Google Map -->
+
+<script>
+const modal = document.getElementById('sharedModal');
+
+modal.addEventListener('show.bs.modal', function (event) {
+  const card = event.relatedTarget;
+
+  modal.querySelector('.modal-title').textContent =
+    card.getAttribute('data-title');
+
+  modal.querySelector('#modalImg').src =
+    card.getAttribute('data-img');
+
+  modal.querySelector('#modalDesc').textContent =
+    card.getAttribute('data-desc');
+});
+</script>
+
+
+
+
 
 
 

@@ -128,7 +128,7 @@
 <!-- ================= FOOTER ================= -->
 <footer class="footer_section">
 <div class="container text-center">
-  <p>&copy; <?= date('Y'); ?> 3MasKentir | All Rights Reserved</p>
+  <p>&copy; <?= date('Y'); ?> CHABABONSAI | All Rights Reserved</p>
 </div>
 </footer>
 

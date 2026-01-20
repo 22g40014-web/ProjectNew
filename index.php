@@ -773,7 +773,7 @@ if (!$promos) {
       <div class="footer-info">
         <p>
           &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Kelompok 3NewsKentir</a>
+          <a href="https://html.design/">CHABABONSAI</a>
         </p>
       </div>
     </div>
