@@ -780,7 +780,7 @@ if (!$promos) {
       <div class="footer-info">
         <p>
           &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">CHABABONSAI</a>
+          <a href="">CHABABONSAI</a>
         </p>
       </div>
     </div>
