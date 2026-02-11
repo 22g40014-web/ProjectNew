@@ -28,7 +28,7 @@
 <!-- ================= HEADER ================= -->
 <div class="hero_area">
   <div class="bg-box">
-    <img src="images/hero-pg.jpg" alt="">
+    <img src="images/tampilan.jpeg" alt="">
   </div>
 
   <header class="header_section">
@@ -126,11 +126,85 @@
 </section>
 
 <!-- ================= FOOTER ================= -->
-<footer class="footer_section">
-<div class="container text-center">
-  <p>&copy; <?= date('Y'); ?> CHABABONSAI | All Rights Reserved</p>
-</div>
-</footer>
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-4 footer-col">
+          <div class="footer_contact">
+            <h4>
+              Contact Us
+            </h4>
+            <div class="contact_link_box">
+              <a href="">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>
+                  Location
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <span>
+                  Call +62123456789
+                </span>
+              </a>
+              <a href="">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <span>
+                  demo@gmail.com
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <div class="footer_detail">
+            <a href="" class="footer-logo">
+              CHABA BONSAI
+            </a>
+            <p>
+              Udah Beli Bonsai dari Chaba Bonsai belum masehhh
+            </p>
+            <div class="footer_social">
+              <a href="">
+                <i class="fa fa-facebook" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-twitter" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-linkedin" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a href="">
+                <i class="fa fa-pinterest" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 footer-col">
+          <h4>
+            Opening Hours
+          </h4>
+          <p>
+            Everyday
+          </p>
+          <p>
+            10.00 Am -10.00 Pm
+          </p>
+        </div>
+      </div>
+      <div class="footer-info">
+        <p>
+          &copy; <span id="displayYear"></span> All Rights Reserved By
+          <a href="https://html.design/">CHABABONSAI</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+  <!-- footer section -->
 
 <!-- ================= JS ================= -->
 <script src="js/jquery-3.4.1.min.js"></script>

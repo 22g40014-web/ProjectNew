@@ -114,44 +114,44 @@
 
   <div class="hero_area">
     <div class="bg-box">
-      <img src="images/hero-pg.jpg" alt="">
+      <img src="images/tampilan.jpeg" alt="">
     </div>
     <!-- header section strats -->
     <header class="header_section">
       <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
           <a class="navbar-brand" href="index.php">
-            <span>
-              CHABA BONSAI
-            </span>
+            <span>CHABA BONSAI</span>
           </a>
 
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
+          <!-- tombol hamburger -->
+          <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class=""></span>
           </button>
 
+          <!-- menu yang di collapse -->
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav  mx-auto ">
-              <li class="nav-item ">
-                <a class="nav-link" href="index.php">Home </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="menu.php">Menu</a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="about.php">About <span class="sr-only">(current)</span> </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="book.php">Book Table</a>
-              </li>
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="menu.php">Menu</a></li>
+              <li class="nav-item active"><a class="nav-link" href="about.php">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="book.php">Book Table</a></li>
             </ul>
+
             <div class="user_option">
               <a href="menu.php?order=1" class="order_online">
                 Order Online
               </a>
             </div>
           </div>
+
         </nav>
+
       </div>
     </header>
     <!-- end header section -->
@@ -299,11 +299,9 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
   </div>
 </section>
 
-
-
   <!-- footer section -->
   <footer class="footer_section">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-md-4 footer-col">
           <div class="footer_contact">
@@ -320,7 +318,7 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
               <a href="">
                 <i class="fa fa-phone" aria-hidden="true"></i>
                 <span>
-                  Call +62 882-3946-8557
+                  Call +62123456789
                 </span>
               </a>
               <a href="">
@@ -335,10 +333,10 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
         <div class="col-md-4 footer-col">
           <div class="footer_detail">
             <a href="" class="footer-logo">
-              CHABABONSAI
+              CHABA BONSAI
             </a>
             <p>
-              Udah Jual Bonsai dari sebelum masehi
+              Udah Beli Bonsai dari Chaba Bonsai belum masehhh
             </p>
             <div class="footer_social">
               <a href="">
@@ -402,8 +400,6 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <!-- popper js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
   <!-- owl slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
