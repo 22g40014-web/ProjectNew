@@ -397,8 +397,97 @@ if (!$promos) {
 
   <!-- offer section -->
   <!-- OFFER SECTION -->
+  <!-- OFFER SECTION -->
 <section class="offer_section layout_padding-bottom">
   <div class="offer_container">
+    <div class="container">
+      <div class="promo-scroll">
+        <div class="row">
+
+
+<?php while ($p = $promos->fetch_assoc()): ?>
+
+<?php
+  $priceNormal = (float) $p['price_normal'];
+
+  if ($p['discount_type'] === 'percent') {
+      $discountPercent = (float) $p['discount_value'];
+      $discountAmount  = $priceNormal * ($discountPercent / 100);
+  } else {
+      $discountAmount  = (float) $p['discount_value'];
+      $discountPercent = round(($discountAmount / $priceNormal) * 100);
+  }
+
+  $priceAfter = $priceNormal - $discountAmount;
+
+  // WA
+  
+  // WA PROMO (JANGAN UBAH LOGIC)
+    $imageUrl = "https://yourdomain.com/uploads/promos/" . $p['image'];
+
+    $waText = urlencode(
+      "Halo Admin 👋\n\n" .
+      "Saya tertarik dengan tanaman berikut:\n\n" .
+      "*Nama Produk:*\n" .
+      $p['product_name'] . "\n\n" .
+      "*Harga Normal:*\n" .
+      "Rp" . number_format($priceNormal,0,',','.') . "\n\n" .
+      "*Harga Promo:*\n" .
+      "Rp" . number_format($priceAfter,0,',','.') . "\n\n" .
+      "Mohon informasi selanjutnya 🙏"
+      //"Gambar:\n" . $imageUrl
+    );
+
+
+  $waLink = "https://wa.me/6288239468557?text=" . $waText;
+?>
+
+<div class="col-md-6 mb-4">
+  <div class="box">
+    <div class="img-box">
+      <img src="uploads/promos/<?= htmlspecialchars($p['image']) ?>"
+           alt="<?= htmlspecialchars($p['product_name']) ?>">
+    </div>
+
+    <div class="detail-box">
+      <h5><?= htmlspecialchars($p['product_name']) ?></h5>
+
+      <h6>
+        <span style="text-decoration:line-through; color:#aaa;">
+          Rp<?= number_format($priceNormal,0,',','.') ?>
+        </span>
+        <br>
+
+        <strong style="color:#ffc107;">
+          Rp<?= number_format($priceAfter,0,',','.') ?>
+        </strong>
+        <small>(<?= $discountPercent ?>% OFF)</small>
+      </h6>
+
+      <a href="<?= $waLink ?>" target="_blank">
+        Order Now
+      </a>
+    </div>
+  </div>
+</div>
+
+<?php endwhile; ?>
+
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+
+
+  >
+  <div class="offer_container product-modal-trigger-promo" 
+        data-name="<?= htmlspecialchars($p['product_name']) ?>"
+        data-description="<?= htmlspecialchars($p['title']) ?>"
+       data-image="<?= htmlspecialchars($p['image']) ?>"
+       data-price="<?= htmlspecialchars($p['price_normal']) ?>">
     <div class="container">
       <div class="promo-scroll">
         <div class="row">
@@ -769,6 +858,46 @@ if (!$promos) {
   </div>
 </div>
 
+<div class="modal fade" id="productModalPromo" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalProductNamePromo"></h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-6 text-center">
+            <img id="modalProductImagePromo"
+                src=""
+                class="img-fluid rounded"
+                alt="">
+          </div>
+
+          <div class="col-md-6">
+            <h6 class="text-warning" id="modalProductPricePromo"></h6>
+            <p id="modalProductDescriptionPromo"></p>
+
+            <!-- TOMBOL ORDER WA (TAMBAHKAN) -->
+            <a href="#"
+              id="waOrderBtn"
+              target="_blank"
+              class="btn btn-success w-100 mt-3">
+              Order via WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
 <!-- ================= CORE JS (WAJIB URUT) ================= -->
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -877,6 +1006,53 @@ $(document).on('click', '.product-modal-trigger', function(){
   $('#productModal').modal('show');
 });
 </script>
+
+
+<!-- modal promo -->
+
+<script>
+$(document).on('click', '.product-modal-trigger-promo', function(){
+
+  $('#modalProductNamePromo').text($(this).data('product_name'));
+  $('#modalProductDescriptionPromo').text($(this).data('title'));
+  $('#modalProductImagePromo').attr('src', $(this).data('image'));
+  $('#modalProductPricePromo').text($(this).data('price_normal'));
+
+  $('#productModalPromo').modal('show');
+});
+</script>
+
+<script>
+$(document).on('click', '.product-modal-trigger-promo', function(){
+
+  let product_name        = $(this).data('name');
+  let description = $(this).data('description');
+  let image       = $(this).data('image');
+  let price       = $(this).data('price_normal');
+
+  $('#modalProductNamePromo').text(product_name);
+  $('#modalProductDescriptionPromo').text(description);
+  $('#modalProductImagePromo').attr('src', image);
+  $('#modalProductPricePromo').text(price);
+
+  let waText =
+    "Halo Admin,%0A" +
+    "Saya tertarik dengan produk berikut:%0A%0A" +
+    "Nama: " + name + "%0A" +
+    "Harga: " + price + "%0A%0A" +
+    "Mohon informasi selanjutnya.";
+
+  let waNumber = "6288239468557";
+
+  $('#waOrderBtn').attr(
+    'href',
+    'https://wa.me/' + waNumber + '?text=' + waText
+  );
+
+  $('#productModalPromo').modal('show');
+});
+</script>
+
 
 <!-- custom js -->
 <script src="js/custom.js"></script>
