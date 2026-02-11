@@ -3,6 +3,15 @@ require_once 'auth.php';
 require_once 'config/db.php';
 
 /* ===============================
+   HELPER QUERY STRING (TAMBAHAN)
+================================ */
+function current_query_string() {
+    return !empty($_SERVER['QUERY_STRING'])
+        ? '?' . $_SERVER['QUERY_STRING']
+        : '';
+}
+
+/* ===============================
    PAGINATION
 ================================ */
 $limit = 10;
@@ -60,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_product'])) {
         }
 
         $conn->commit();
-        header("Location: products.php");
+        header("Location: products.php" . current_query_string());
         exit;
 
     } catch (Exception $e) {
@@ -117,7 +126,13 @@ if (isset($_POST['update_product'])) {
         }
     }
 
-    header("Location: products.php");
+    $params = [
+    'search_name' => $_POST['search_name'] ?? '',
+    'search_category' => $_POST['search_category'] ?? '',
+    'page' => $_POST['page'] ?? 1
+    ];
+
+    header("Location: products.php?". http_build_query($params));
     exit;
 }
 
@@ -128,7 +143,7 @@ if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     $conn->query("DELETE FROM product_stock WHERE product_id=$id");
     $conn->query("DELETE FROM products WHERE id=$id");
-    header("Location: products.php");
+    header("Location: products.php" . current_query_string() );
     exit;
 }
 
@@ -370,6 +385,17 @@ while($c=$cat5->fetch_assoc()):
     <div class="modal-content">
 
       <form method="POST" enctype="multipart/form-data">
+
+        <!-- SIMPAN FILTER PENCARIAN (TAMBAHAN) -->
+        <input type="hidden" name="search_name"
+              value="<?= htmlspecialchars($_GET['search_name'] ?? '') ?>">
+
+        <input type="hidden" name="search_category"
+              value="<?= htmlspecialchars($_GET['search_category'] ?? '') ?>">
+
+        <input type="hidden" name="page"
+              value="<?= htmlspecialchars($_GET['page'] ?? 1) ?>">
+
 
         <!-- HEADER -->
         <div class="modal-header">
