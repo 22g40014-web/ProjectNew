@@ -254,10 +254,10 @@ Temukan inspirasi dan keindahan alami dari koleksi kami.
              data-bs-toggle="modal"
              data-bs-target="#sharedModal"
              data-title="Perawatan Bonsai"
-             data-img="images/about-img.jpg"
+             data-img="images/about-img-2.jpeg"
              data-desc="Perawatan berkala agar bonsai tetap sehat dan indah.">
 
-          <img src="images/about-img.jpg"
+          <img src="images/about-img-2.jpeg"
                class="card-img-top"
                style="height:160px; object-fit:cover;"
                alt="">
