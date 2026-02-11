@@ -61,7 +61,12 @@ if (isset($_GET['toggle_menu'])) {
         WHERE id = $id
     ");
 
-    header("Location: dashboard.php");
+    $params = $_GET;
+    unset($params['toggle_menu']);
+
+    $query = http_build_query($params);
+
+    header("Location: dashboard.php" . ($query ? '?' . $query : ''));
     exit;
 }
 
@@ -174,7 +179,11 @@ $baseQuery = http_build_query($queryParams);
         <?php endif; ?>
     </td>
     <td class="text-center">
-        <a href="dashboard.php?toggle_menu=<?= $p['id']; ?>"
+        <a href="dashboard.php?<?= http_build_query(array_merge(
+            $_GET,
+            ['toggle_menu' => $p['id']]
+        )); ?>"
+
         class="btn btn-sm <?= $p['show_in_menu'] ? 'btn-success' : 'btn-secondary'; ?>"
         onclick="return confirm('Ubah status tampilan menu produk ini?')">
             <?= $p['show_in_menu'] ? 'Tampil' : 'Disembunyikan'; ?>
