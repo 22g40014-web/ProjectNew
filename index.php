@@ -731,16 +731,13 @@ if (!$promos) {
               Contact Us
             </h4>
             <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>
-                  Location
-                </span>
+              <a href="https://maps.app.goo.gl/uhVD6XXpNy6FjFGi7">
+                <i class="fa fa-map-marker" aria-hidden="true"><span> Kunjungi Kami</span></i>
               </a>
               <a href="">
                 <i class="fa fa-phone" aria-hidden="true"></i>
                 <span>
-                  Call +62123456789
+                  Call +62 878-6555-5340
                 </span>
               </a>
               <a href="">
@@ -760,23 +757,6 @@ if (!$promos) {
             <p>
               Udah Beli Bonsai dari Chaba Bonsai belum masehhh
             </p>
-            <div class="footer_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
-              </a>
-            </div>
           </div>
         </div>
         <div class="col-md-4 footer-col">
@@ -784,10 +764,16 @@ if (!$promos) {
             Opening Hours
           </h4>
           <p>
-            Everyday
+            Senin - Jumat
           </p>
           <p>
-            10.00 Am -10.00 Pm
+            17.00 - 20.00
+          </p>
+          <p>
+            Sabtu - Minggu
+          </p>
+          <p>
+            7.00 - 20.00
           </p>
         </div>
       </div>
